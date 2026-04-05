@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Realtime Speaker Brief</title>
+  <meta name="description" content="Speaker preparation brief for Research Realm Podcast Episode 3.">
+  <meta property="og:title" content="Realtime Speaker Brief">
+  <meta property="og:description" content="A shareable review page for the Research Realm podcast speaker prep brief.">
+  <meta property="og:type" content="website">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:Inter,system-ui,sans-serif;background:#f4f5f7;color:#1a1a2e;line-height:1.6}
+    a{color:inherit}
+    .site-top{background:#10111f;color:#fff;padding:12px 18px;font-size:13px}
+    .site-top a{text-decoration:none;color:#a5b4fc;font-weight:600}
+    .site-top a:hover{text-decoration:underline}
+    .hdr{background:linear-gradient(135deg,#1a1a2e,#2d2b55);color:#fff;padding:32px 24px 22px}
+    .hdr-inner{max-width:760px;margin:0 auto}
+    .hdr-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px;flex-wrap:wrap}
+    .hdr-label{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#a5b4fc}
+    .hdr-badge{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;background:rgba(255,255,255,.15);padding:4px 12px;border-radius:4px}
+    .hdr h1{font-size:25px;font-weight:700;margin-bottom:5px}
+    .hdr p{font-size:14px;color:#c7d2fe;margin-bottom:18px}
+    .hdr-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px 22px;font-size:12px;color:#c7d2fe}
+    .hdr-grid strong{color:#fff}
+    .tabs{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:10;display:flex;max-width:760px;margin:0 auto;overflow:auto}
+    .tab{padding:11px 18px;font-size:13px;font-weight:400;color:#666;background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
+    .tab.on{font-weight:600;color:#6366f1;border-bottom-color:#6366f1}
+    .tabs-wrap{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:10}
+    .content{max-width:760px;margin:0 auto;padding:22px 12px 50px}
+    .panel{display:none}
+    .panel.on{display:block}
+    .card{background:#fff;border-radius:10px;border:1px solid #e5e7eb;margin-bottom:14px;overflow:hidden}
+    .card-hdr{display:flex;align-items:center;gap:11px;padding:13px 16px;border-bottom:1px solid #f0f0f0}
+    .circ{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;flex-shrink:0}
+    .card-title{font-size:15px;font-weight:700}
+    .card-sub{font-size:11px;color:#888;margin-top:1px}
+    .card-body{padding:13px 16px}
+    .card-body>p{font-size:13px;color:#555;margin-bottom:12px}
+    .acc{border:1px solid #e5e7eb;border-radius:7px;margin-bottom:5px;overflow:hidden}
+    .acc-btn{width:100%;display:flex;align-items:center;gap:7px;padding:10px 14px;background:#fff;border:none;cursor:pointer;text-align:left;font-size:13px;font-weight:600;color:#1a1a2e;font-family:inherit}
+    .acc-btn:hover{background:#f8f9fb}
+    .acc-body{display:none;padding:3px 14px 12px}
+    .acc.open .acc-body{display:block}
+    .acc.open .acc-btn{background:#f8f9fb}
+    .acc .arrow{margin-left:auto;transition:transform .25s;font-size:12px}
+    .acc.open .arrow{transform:rotate(180deg)}
+    .ctx{background:#f8f9fb;border-radius:5px;padding:8px 12px;margin:5px 0 10px;font-size:12px;color:#555}
+    .ctx-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#999;margin-bottom:2px}
+    .qlabel{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#6366f1;margin-bottom:3px}
+    .qrow{display:flex;gap:9px;padding:8px 0;border-bottom:1px solid #f0f0f0;align-items:flex-start}
+    .qrow:last-child{border-bottom:none}
+    .qtag{font-size:10px;font-weight:700;color:#fff;padding:2px 8px;border-radius:3px;white-space:nowrap;margin-top:2px}
+    .qtxt{font-size:13px;color:#333;font-style:italic;line-height:1.5}
+    .callout{border-left:3px solid #6366f1;background:#f0f0ff;padding:10px 14px;border-radius:0 6px 6px 0;margin:10px 0}
+    .callout-pk{border-left-color:#ec4899;background:#fdf2f8}
+    .callout-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2px}
+    .tl{display:flex;gap:5px;margin-bottom:18px;flex-wrap:wrap}
+    .tl-item{flex:1;min-width:65px;border-radius:6px;padding:7px 8px;text-align:center}
+    .tl-item .tl-l{font-size:9px;font-weight:700;color:rgba(255,255,255,.8)}
+    .tl-item .tl-t{font-size:14px;font-weight:700;color:#fff}
+    .rf-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:14px}
+    .rf-item{background:#f8f9fb;border-radius:5px;padding:8px 11px;font-size:12px;color:#333}
+    .rf-item span{color:#ec4899;font-weight:700}
+    .data-card{background:#fff;border-radius:8px;border:1px solid #e5e7eb;margin-bottom:8px;padding:14px 16px}
+    .data-card .d-num{background:#6366f1;color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex-shrink:0}
+    .data-card .d-stat{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:5px}
+    .data-card .d-detail{font-size:12.5px;color:#555;margin-bottom:7px;line-height:1.5}
+    .data-card .d-src{font-size:11px;font-weight:600;color:#6366f1;background:#f0f0ff;padding:2px 7px;border-radius:3px;margin-right:6px}
+    .data-card a{font-size:11px;color:#6366f1}
+    .note-box{background:#fffbeb;border:1px solid #fde68a;border-radius:7px;padding:12px 16px;margin-top:14px;font-size:12px;color:#92400e;line-height:1.5}
+    .prep-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+    .prep-card{border-radius:8px;padding:14px}
+    .prep-card.rick{background:#f0fdf4;border:1px solid #bbf7d0}
+    .prep-card.jeff{background:#fffbeb;border:1px solid #fde68a}
+    .prep-card h4{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:7px}
+    .prep-card.rick h4{color:#059669}
+    .prep-card.jeff h4{color:#d97706}
+    .prep-item{font-size:12.5px;color:#333;padding:4px 0;border-bottom:1px solid rgba(0,0,0,.06);display:flex;gap:5px}
+    .prep-item span{font-weight:700;flex-shrink:0}
+    .prep-card.rick .prep-item span{color:#059669}
+    .prep-card.jeff .prep-item span{color:#d97706}
+    .think-q{padding:10px 0;border-bottom:1px solid #f0f0f0}
+    .think-q .tq{font-size:13.5px;font-weight:600;color:#1a1a2e;margin-bottom:2px}
+    .think-q .tw{font-size:12px;color:#888;font-style:italic}
+    .tone-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;margin-bottom:14px}
+    .tone-yes{background:#f0fdf4;padding:14px 16px}
+    .tone-no{background:#fef2f2;padding:14px 16px}
+    .tone-yes h4{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#166534;margin-bottom:8px}
+    .tone-no h4{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#991b1b;margin-bottom:8px}
+    .tone-yes div,.tone-no div{font-size:12.5px;padding:3px 0}
+    .tone-yes div{color:#333}
+    .tone-no div{color:#555}
+    .log-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 22px;margin-bottom:14px}
+    .log-grid .ll{font-size:12px;font-weight:600;color:#1a1a2e}
+    .log-grid .lv{font-size:12.5px;color:#555}
+    .footer{background:linear-gradient(135deg,#1a1a2e,#2d2b55);border-radius:10px;padding:22px;color:#fff;text-align:center;margin-top:10px}
+    .footer h3{font-size:15px;font-weight:600;margin-bottom:5px}
+    .footer p{font-size:12.5px;color:#c7d2fe}
+    .footer .sm{font-size:11px;color:#a5b4fc;margin-top:10px}
+    .key-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+    .key-tag{font-size:10px;font-weight:700;color:#fff;padding:3px 10px;border-radius:4px}
+    .intro-box{background:#fff;border-radius:10px;padding:18px;border:1px solid #e5e7eb;margin-bottom:18px}
+    .intro-box h2{font-size:17px;font-weight:700;margin-bottom:7px}
+    .intro-box p{font-size:13px;color:#555}
+    @media(max-width:600px){.prep-grid,.tone-grid,.hdr-grid,.log-grid,.rf-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="site-top"><a href="../">← Back to project review home</a></div>
+
+  <div class="hdr"><div class="hdr-inner">
+  <div class="hdr-top"><span class="hdr-label">Research Realm Podcast</span><span class="hdr-badge">Speaker Prep Brief</span></div>
+  <h1>Episode 3: The Technology Episode</h1>
+  <p>What's working in clinical research technology, what's noise, and where the industry is heading.</p>
+  <div class="hdr-grid">
+  <div><strong>Recording:</strong> Tuesday, 1:00 PM — In Person</div>
+  <div><strong>Format:</strong> 4-person panel · 60 min → 45 min final</div>
+  <div><strong>Hosts:</strong> Nicole Stiff & Mazhar Jaffry, Revival</div>
+  <div><strong>Guests:</strong> Rick Greenfield & Jeff Kozloff, RealTime</div>
+  <div><strong>Audience:</strong> CRCs, site owners, tech leaders, investors</div>
+  <div><strong>Series:</strong> Episode 3 of Research Realm</div>
+  </div></div></div>
+
+  <div class="tabs-wrap"><div class="tabs" id="tabs">
+  <button class="tab on" onclick="showTab('flow')">Episode Flow</button>
+  <button class="tab" onclick="showTab('data')">Industry Data</button>
+  <button class="tab" onclick="showTab('prep')">Your Preparation</button>
+  <button class="tab" onclick="showTab('info')">Logistics & Tone</button>
+  </div></div>
+
+  <div class="content">
+
+  <div class="panel on" id="flow">
+
+  <div class="intro-box">
+  <h2>How This Episode Works</h2>
+  <p>This is an industry conversation about clinical research technology. Revival and RealTime's shared experience is the foundation for a broader discussion. The goal is education — your expertise comes through naturally. <strong>The best promotion is being the smartest, most honest voices in the room.</strong></p>
+  </div>
+
+  <div class="tl">
+  <div class="tl-item" style="background:#6366f1"><div class="tl-l">Intros</div><div class="tl-t">7m</div></div>
+  <div class="tl-item" style="background:#059669"><div class="tl-l">Reality Check</div><div class="tl-t">15m</div></div>
+  <div class="tl-item" style="background:#d97706"><div class="tl-l">Big Questions</div><div class="tl-t">18m</div></div>
+  <div class="tl-item" style="background:#7c3aed"><div class="tl-l">Roadmap</div><div class="tl-t">12m</div></div>
+  <div class="tl-item" style="background:#ec4899"><div class="tl-l">Rapid Fire</div><div class="tl-t">6m</div></div>
+  </div>
+
+  <div class="card">
+  <div class="card-hdr"><div class="circ" style="background:#6366f1">→</div><div><div class="card-title">Opening & Introductions</div><div class="card-sub">~7 min</div></div></div>
+  <div class="card-body">
+  <p>Nicole & Mazhar welcome the audience and frame the episode. Then we hand it to you:</p>
+  <p><strong style="color:#059669">Rick goes first</strong> — founder story, what RealTime is, why you built it.<br><strong style="color:#d97706">Jeff follows</strong> — your role, perspective, where the company is today.<br><em style="color:#888">Think dinner table, not pitch deck.</em></p>
+  <div class="callout"><div class="callout-label" style="color:#6366f1">Icebreaker Question</div>
+  <div style="font-size:14px;font-style:italic">"What is one shift in clinical research technology that feels very real to you right now?"</div></div>
+  </div></div>
+
+  <div class="card">
+  <div class="card-hdr"><div class="circ" style="background:#059669">1</div><div><div class="card-title">The Technology Reality Check</div><div class="card-sub">~15 min · What's actually happening right now</div></div></div>
+  <div class="card-body">
+  <p>Grounded in industry data and your real experience across hundreds of sites. We present stats, you react with what you're seeing.</p>
+
+  <div class="acc"><button class="acc-btn" onclick="toggleAcc(this)">🔌 System Overload<span class="arrow">▾</span></button><div class="acc-body">
+  <div class="ctx"><div class="ctx-label">Context</div>Sites use 5–8+ systems per study. 15+ concurrent studies = 40+ platforms. Each new protocol procedure often means another system.</div>
+  <div class="qlabel">Questions We May Ask</div>
+  <div class="qrow"><div class="qtag" style="background:#6366f1">Rick & Jeff</div><div class="qtxt">"Across your user base, how many different systems do you see the average site juggling alongside RealTime? What does that integration landscape actually look like?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#6366f1">Rick & Jeff</div><div class="qtxt">"When a new site comes to you, what does their technology stack typically look like? What are you replacing, and what are you integrating with?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#ec4899">Nicole & Mazhar</div><div class="qtxt">"At Revival, how many systems does a coordinator realistically touch in a single patient visit?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#1a1a2e">Everyone</div><div class="qtxt">"Is there a point where adding more technology actually makes a site slower? Are we still innovating, or are we just adding more layers?"</div></div>
+  </div></div>
+
+  <div class="acc"><button class="acc-btn" onclick="toggleAcc(this)">🔗 Integration Reality<span class="arrow">▾</span></button><div class="acc-body">
+  <div class="ctx"><div class="ctx-label">Context</div>Interoperability is a top site frustration. The tech market grows 12–14% CAGR, but investment builds new silos rather than connecting existing ones.</div>
+  <div class="qlabel">Questions We May Ask</div>
+  <div class="qrow"><div class="qtag" style="background:#6366f1">Rick & Jeff</div><div class="qtxt">"How many of the integrations sites need — EDC connections, IRT systems, EHR links — actually work smoothly today? What percentage is seamless vs. held together with workarounds?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#6366f1">Rick & Jeff</div><div class="qtxt">"When you're building integrations, what are the biggest barriers? Is it the technology, or getting other vendors to cooperate?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#1a1a2e">Everyone</div><div class="qtxt">"The industry keeps talking about interoperability — are we actually making progress, or just talking about it more?"</div></div>
+  </div></div>
+
+  <div class="acc"><button class="acc-btn" onclick="toggleAcc(this)">👥 Technology & the Staffing Crisis<span class="arrow">▾</span></button><div class="acc-body">
+  <div class="ctx"><div class="ctx-label">Context</div>CRC turnover 20–30%. Replacing one costs $30K–$50K. Coordinators spend 30–40% of time on admin/data entry rather than patient-facing work.</div>
+  <div class="qlabel">Questions We May Ask</div>
+  <div class="qrow"><div class="qtag" style="background:#6366f1">Rick & Jeff</div><div class="qtxt">"From your platform data — how much time does technology save when a site moves from fragmented systems to a unified one? Do you have real numbers?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#6366f1">Rick & Jeff</div><div class="qtxt">"When a site has high CRC turnover, what does that do to technology adoption? Does it reset the learning curve every time?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#ec4899">Nicole & Mazhar</div><div class="qtxt">"When hiring coordinators now, does the technology stack come up in interviews? Are candidates asking about tools?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#1a1a2e">Everyone</div><div class="qtxt">"If technology could give a coordinator back 5 hours a week from admin, what would that do for retention?"</div></div>
+  </div></div>
+
+  <div class="acc"><button class="acc-btn" onclick="toggleAcc(this)">⚡ CTMS-EDC Auto Data Transfer<span class="arrow">▾</span></button><div class="acc-body">
+  <div class="ctx"><div class="ctx-label">Context</div>Dual data entry remains standard. Transcription errors cause 15–25% of queries. Each query = 10–15 min. Mid-size study = hundreds of hours of rework.</div>
+  <div class="qlabel">Questions We May Ask</div>
+  <div class="qrow"><div class="qtag" style="background:#059669">Rick</div><div class="qtxt">"Where is RealTime right now on CTMS-to-EDC data transfer? What's technically possible today vs. what you're working toward?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#6366f1">Rick & Jeff</div><div class="qtxt">"What are the real barriers — CDISC standards, sponsor API willingness, or something else entirely?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#ec4899">Nicole & Mazhar</div><div class="qtxt">"If coordinators could enter data once and have it flow to the sponsor EDC automatically — what would that change at Revival?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#1a1a2e">Everyone</div><div class="qtxt">"Is full CTMS-EDC integration a 2-year problem, a 5-year problem, or a 10-year problem?"</div></div>
+  </div></div>
+
+  <div class="acc"><button class="acc-btn" onclick="toggleAcc(this)">🔥 Contrarian Round<span class="arrow">▾</span></button><div class="acc-body">
+  <div class="ctx"><div class="ctx-label">Context</div>Each person gets one shot. No safe answers. Creates debate and shareable social clips.</div>
+  <div class="qlabel">The Question</div>
+  <div class="qrow"><div class="qtag" style="background:#1a1a2e">Everyone</div><div class="qtxt">"What's one commonly accepted belief about clinical research technology that you think is flat-out wrong?"</div></div>
+  </div></div>
+
+  </div></div>
+
+  <div class="card">
+  <div class="card-hdr"><div class="circ" style="background:#d97706">2</div><div><div class="card-title">The Big Technology Questions</div><div class="card-sub">~18 min · Forward-looking, opinionated, deep</div></div></div>
+  <div class="card-body">
+  <p>Specific technologies — where they deliver value and where the industry is still figuring it out.</p>
+
+  <div class="acc"><button class="acc-btn" onclick="toggleAcc(this)">🤖 AI — Real vs. Hype<span class="arrow">▾</span></button><div class="acc-body">
+  <div class="ctx"><div class="ctx-label">Context</div>AI could cut timelines 15–25%, save $1B/program. But only 10–15% of healthcare AI reaches production. Most clinical research AI is early stage.</div>
+  <div class="qlabel">Questions We May Ask</div>
+  <div class="qrow"><div class="qtag" style="background:#6366f1">Rick & Jeff</div><div class="qtxt">"Where is AI actually working inside clinical trial technology right now — not in a press release, but in a product sites are using today?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#6366f1">Rick & Jeff</div><div class="qtxt">"Is RealTime using AI or ML currently? If so, where? If not yet, where are you headed?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#1a1a2e">Everyone</div><div class="qtxt">"If you could wave a magic wand and have AI solve one problem in clinical research tomorrow, what would it be?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#ec4899">Mazhar</div><div class="qtxt">"Are sponsors coming to you saying 'we're using AI for X' — and is it actually changing anything on the site side?"</div></div>
+  </div></div>
+
+  <div class="acc"><button class="acc-btn" onclick="toggleAcc(this)">🌐 Decentralized & Hybrid Trials<span class="arrow">▾</span></button><div class="acc-body">
+  <div class="ctx"><div class="ctx-label">Context</div>Post-COVID DCT hype has cooled. Hybrid models dominate. Technology burden falls on sites — remote consent, virtual visits, wearables, DTP logistics.</div>
+  <div class="qlabel">Questions We May Ask</div>
+  <div class="qrow"><div class="qtag" style="background:#6366f1">Rick & Jeff</div><div class="qtxt">"How many of your sites are running studies with DCT or hybrid components right now? Is that growing?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#6366f1">Rick & Jeff</div><div class="qtxt">"What technology does a site actually need to support a hybrid trial? Does the average site have it?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#6366f1">Rick & Jeff</div><div class="qtxt">"When a sponsor says 'this trial has a DCT component,' what new systems come into play for the site?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#ec4899">Nicole</div><div class="qtxt">"From business development — are you seeing more hybrid opportunities? What technology requirements come attached?"</div></div>
+  </div></div>
+
+  <div class="acc"><button class="acc-btn" onclick="toggleAcc(this)">📋 eSource & eConsent Adoption<span class="arrow">▾</span></button><div class="acc-body">
+  <div class="ctx"><div class="ctx-label">Context</div>eSource adoption under 25–30%. Paper consent still default at many sites. Barriers often aren't the technology itself.</div>
+  <div class="qlabel">Questions We May Ask</div>
+  <div class="qrow"><div class="qtag" style="background:#6366f1">Rick & Jeff</div><div class="qtxt">"What's the actual adoption rate you're seeing? Do sites go all-in on eSource/eConsent or ease in?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#059669">Rick</div><div class="qtxt">"You built these tools — why is adoption still this low industry-wide? Technology problem or everything around it?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#ec4899">Nicole & Mazhar</div><div class="qtxt">"At Revival, where are you on the eSource/eConsent journey? What was the hardest part?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#1a1a2e">Everyone</div><div class="qtxt">"What needs to happen for eSource to become the default instead of the exception?"</div></div>
+  </div></div>
+
+  <div class="acc"><button class="acc-btn" onclick="toggleAcc(this)">💰 Financial Technology<span class="arrow">▾</span></button><div class="acc-body">
+  <div class="ctx"><div class="ctx-label">Context</div>Sites may fail to invoice 5–15% of billable activities. AR cycles 90–120+ days. Multi-study sites = hundreds of thousands in lost revenue.</div>
+  <div class="qlabel">Questions We May Ask</div>
+  <div class="qrow"><div class="qtag" style="background:#6366f1">Rick & Jeff</div><div class="qtxt">"When a site starts using RealTime's financial tracking, what's the typical gap between what they were billing and what they should have been? Measurable recovery?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#d97706">Jeff</div><div class="qtxt">"Why is financial technology so underdeveloped in clinical research? A restaurant has better invoicing than most research sites."</div></div>
+  <div class="qrow"><div class="qtag" style="background:#ec4899">Mazhar</div><div class="qtxt">"As a site CEO running a business, how much does financial visibility matter in your technology decisions?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#1a1a2e">Everyone</div><div class="qtxt">"If you could show a site owner one dashboard — one view of their business — what would it show?"</div></div>
+  </div></div>
+
+  <div class="acc"><button class="acc-btn" onclick="toggleAcc(this)">🔍 What's Still Missing<span class="arrow">▾</span></button><div class="acc-body">
+  <div class="ctx"><div class="ctx-label">Context</div>Despite massive investment, significant technology gaps remain. This is where the conversation gets visionary.</div>
+  <div class="qlabel">Questions We May Ask</div>
+  <div class="qrow"><div class="qtag" style="background:#059669">Rick</div><div class="qtxt">"After building this platform for years, what's the one technology problem nobody has solved that keeps you up at night?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#d97706">Jeff</div><div class="qtxt">"Where do you see the biggest gap between what exists and what sites actually need?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#ec4899">Mazhar</div><div class="qtxt">"As a buyer of technology, what tool do you wish existed that nobody's built yet?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#1a1a2e">Everyone</div><div class="qtxt">"If a startup founder said 'I want to build the next great clinical research tool' — where would you tell them to focus?"</div></div>
+  </div></div>
+
+  </div></div>
+
+  <div class="card">
+  <div class="card-hdr"><div class="circ" style="background:#7c3aed">3</div><div><div class="card-title">The Technology Roadmap</div><div class="card-sub">~12 min · What's coming and what to do now</div></div></div>
+  <div class="card-body">
+  <p>Looking ahead — what the industry needs and what you're building next.</p>
+
+  <div class="acc"><button class="acc-btn" onclick="toggleAcc(this)">🗓️ The Next 24 Months<span class="arrow">▾</span></button><div class="acc-body">
+  <div class="ctx"><div class="ctx-label">Context</div>FDA modernization pushes digital health adoption and electronic regulatory submissions. CTTI explicitly called for tech that reduces site burden.</div>
+  <div class="qlabel">Questions We May Ask</div>
+  <div class="qrow"><div class="qtag" style="background:#d97706">Jeff</div><div class="qtxt">"What is RealTime building for the next 24 months that you can share? Where is the product headed?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#059669">Rick</div><div class="qtxt">"What technology shift are you betting on? Where are you investing development resources right now?"</div></div>
+  <div class="qrow"><div class="qtag" style="background:#1a1a2e">Everyone</div><div class="qtxt">"What should a site owner do this month to prepare their technology infrastructure for where the industry is heading?"</div></div>
+  </div></div>
+
+  <div class="acc"><button class="acc-btn" onclick="toggleAcc(this)">✅ What's Working<span class="arrow">▾</span></button><div class="acc-body">
+  <div class="qrow"><div class="qtag" style="background:#1a1a2e">Everyone</div><div class="qtxt">"One area where clinical research technology is making real, genuine progress."</div></div>
+  </div></div>
+
+  <div class="acc"><button class="acc-btn" onclick="toggleAcc(this)">🔮 Bold Predictions<span class="arrow">▾</span></button><div class="acc-body">
+  <div class="ctx"><div class="ctx-label">Context</div>Each speaker: one prediction for the next 3–5 years. No hedging, no "it depends."</div>
+  <div class="qrow"><div class="qtag" style="background:#1a1a2e">Everyone</div><div class="qtxt">"One bold prediction for clinical research technology by 2030. Don't play it safe."</div></div>
+  </div></div>
+
+  </div></div>
+
+  <div class="card">
+  <div class="card-hdr"><div class="circ" style="background:#ec4899">⚡</div><div><div class="card-title">Rapid Fire & Close</div><div class="card-sub">~6 min · Quick answers, then one meaningful close</div></div></div>
+  <div class="card-body">
+  <p>Quick, instinctive answers — one or two words. We alternate between all four speakers.</p>
+  <div class="rf-grid">
+  <div class="rf-item"><span>› </span>AI in clinical research — one word</div>
+  <div class="rf-item"><span>› </span>One thing sites need less of → more of</div>
+  <div class="rf-item"><span>› </span>Tech trend you believe in → skeptical of</div>
+  <div class="rf-item"><span>› </span>The one metric you check most often</div>
+  <div class="rf-item"><span>› </span>Morning thinker or late-night strategist?</div>
+  <div class="rf-item"><span>› </span>Explain your job to a five-year-old</div>
+  </div>
+  <div class="callout callout-pk"><div class="callout-label" style="color:#ec4899">Closing — Take Your Time</div>
+  <div style="font-size:14px;font-style:italic">"One piece of advice for someone navigating the future of clinical research."</div>
+  <div style="font-size:12px;color:#888;margin-top:4px">Last thing the audience hears. Go around the table, land your answer.</div>
+  </div>
+  </div></div>
+
+  </div>
+
+  <div class="panel" id="data">
+
+  <div class="intro-box">
+  <h2>Industry Data We'll Reference</h2>
+  <p>Nicole and Mazhar will bring up these stats during the conversation. <strong>You don't need to memorize them</strong> — we want your reaction and how they compare to what you see in practice. Your platform data is more valuable than any published stat.</p>
+  </div>
+
+  <div class="data-card"><div style="display:flex;gap:11px;align-items:flex-start"><div class="d-num">1</div><div><div class="d-stat">Sites use 5–8+ technology platforms per study</div><div class="d-detail">A site running 15+ concurrent studies may manage 40+ distinct systems. Each system means another login, data structure, and entry point.</div><span class="d-src">SCRS Site Landscape Survey</span><a href="https://myscrs.org" target="_blank" rel="noreferrer">View source →</a></div></div></div>
+
+  <div class="data-card"><div style="display:flex;gap:11px;align-items:flex-start"><div class="d-num">2</div><div><div class="d-stat">Protocol procedures increased ~65% over 20 years</div><div class="d-detail">More endpoints, assessments, and data points per visit. Each procedure often adds another system touchpoint for coordinators.</div><span class="d-src">Tufts CSDD</span><a href="https://csdd.tufts.edu" target="_blank" rel="noreferrer">View source →</a></div></div></div>
+
+  <div class="data-card"><div style="display:flex;gap:11px;align-items:flex-start"><div class="d-num">3</div><div><div class="d-stat">Clinical trial tech market projected &gt;$8B by 2027</div><div class="d-detail">Growing 12–14% CAGR, yet much investment funds new standalone tools rather than connecting existing ones.</div><span class="d-src">Grand View Research</span><a href="https://www.grandviewresearch.com/industry-analysis/clinical-trial-management-system-ctms-market" target="_blank" rel="noreferrer">View source →</a></div></div></div>
+
+  <div class="data-card"><div style="display:flex;gap:11px;align-items:flex-start"><div class="d-num">4</div><div><div class="d-stat">CRC annual turnover: 20–30%</div><div class="d-detail">Replacing one coordinator costs $30K–$50K (recruitment, onboarding, lost productivity, protocol re-training).</div><span class="d-src">SCRS & ACRP Workforce Studies</span><a href="https://acrpnet.org" target="_blank" rel="noreferrer">View source →</a></div></div></div>
+
+  <div class="data-card"><div style="display:flex;gap:11px;align-items:flex-start"><div class="d-num">5</div><div><div class="d-stat">CRCs spend 30–40% of time on admin/data entry</div><div class="d-detail">Time not spent with patients or on protocol execution — the work that attracted them to clinical research.</div><span class="d-src">SCRS Surveys</span><a href="https://myscrs.org" target="_blank" rel="noreferrer">View source →</a></div></div></div>
+
+  <div class="data-card"><div style="display:flex;gap:11px;align-items:flex-start"><div class="d-num">6</div><div><div class="d-stat">Transcription errors → 15–25% of all site queries</div><div class="d-detail">Each query averages 10–15 min to resolve. A mid-size study generates hundreds of hours of rework.</div><span class="d-src">EDC & Data Management Analyses</span><a href="https://www.appliedclinicaltrialsonline.com" target="_blank" rel="noreferrer">View source →</a></div></div></div>
+
+  <div class="data-card"><div style="display:flex;gap:11px;align-items:flex-start"><div class="d-num">7</div><div><div class="d-stat">eSource adoption: under 25–30% of sites</div><div class="d-detail">Paper source remains dominant. Barriers: cost, staff resistance, sponsor/IRB acceptance.</div><span class="d-src">Industry Adoption Surveys</span><a href="https://www.clinicalleader.com" target="_blank" rel="noreferrer">View source →</a></div></div></div>
+
+  <div class="data-card"><div style="display:flex;gap:11px;align-items:flex-start"><div class="d-num">8</div><div><div class="d-stat">AI could cut trial timelines 15–25%</div><div class="d-detail">Potentially saving $1B per drug program. Applications: patient matching, protocol optimization, anomaly detection, predictive enrollment.</div><span class="d-src">Deloitte 2024 Life Sciences</span><a href="https://www2.deloitte.com/us/en/industries/life-sciences-and-health-care.html" target="_blank" rel="noreferrer">View source →</a></div></div></div>
+
+  <div class="data-card"><div style="display:flex;gap:11px;align-items:flex-start"><div class="d-num">9</div><div><div class="d-stat">Only 10–15% of healthcare AI reaches production</div><div class="d-detail">The gap between pilot and deployment is enormous. Most clinical research AI remains proof-of-concept.</div><span class="d-src">MIT Technology Review</span><a href="https://www.technologyreview.com" target="_blank" rel="noreferrer">View source →</a></div></div></div>
+
+  <div class="data-card"><div style="display:flex;gap:11px;align-items:flex-start"><div class="d-num">10</div><div><div class="d-stat">Sites fail to invoice 5–15% of billable activities</div><div class="d-detail">Manual tracking + disconnected financials = hundreds of thousands in lost revenue annually.</div><span class="d-src">Site Financial Management Studies</span><a href="https://myscrs.org" target="_blank" rel="noreferrer">View source →</a></div></div></div>
+
+  <div class="data-card"><div style="display:flex;gap:11px;align-items:flex-start"><div class="d-num">11</div><div><div class="d-stat">Accounts receivable: 90–120+ days average</div><div class="d-detail">Compare to 30–60 days in most industries. Sites effectively provide interest-free loans to sponsors.</div><span class="d-src">Industry Financial Benchmarks</span><a href="https://myscrs.org" target="_blank" rel="noreferrer">View source →</a></div></div></div>
+
+  <div class="note-box"><strong>Note:</strong> These are industry estimates from published research. They're conversation starters — if your numbers tell a different story, that's even better content for the audience.</div>
+
+  </div>
+
+  <div class="panel" id="prep">
+
+  <div class="intro-box">
+  <h2>What We'd Love You to Bring</h2>
+  </div>
+
+  <div class="prep-grid">
+  <div class="prep-card rick"><h4>Rick — Founder</h4>
+  <div class="prep-item"><span>→</span> Your origin story — the problem, what was broken, why you built this</div>
+  <div class="prep-item"><span>→</span> 2–3 specific moments showing what sites dealt with before unified tech</div>
+  <div class="prep-item"><span>→</span> Technical depth on CTMS-EDC integration — where you are, what's hard</div>
+  <div class="prep-item"><span>→</span> Honest take on what technology still can't solve</div>
+  <div class="prep-item"><span>→</span> Your vision for site technology in 3–5 years</div>
+  </div>
+  <div class="prep-card jeff"><h4>Jeff — CEO</h4>
+  <div class="prep-item"><span>→</span> Market perspective — patterns and trends across the customer base</div>
+  <div class="prep-item"><span>→</span> Platform data you're comfortable sharing (adoption, time savings, revenue recovery)</div>
+  <div class="prep-item"><span>→</span> Technology investment landscape — where money goes, where it should</div>
+  <div class="prep-item"><span>→</span> Business case for unified technology — how site owners see ROI</div>
+  <div class="prep-item"><span>→</span> What RealTime is building next that you can share publicly</div>
+  </div>
+  </div>
+
+  <div class="callout" style="margin-bottom:20px"><div style="font-size:13px;font-weight:600;color:#1a1a2e;margin-bottom:4px">For Both of You</div>
+  <p style="font-size:13px;color:#444;margin:0">Come with <strong>stories, not slides.</strong> 2–3 anonymized examples — a site that transformed, a surprising data insight, a moment a customer said something that stuck. Real stories make episodes shareable.</p></div>
+
+  <div class="card"><div class="card-body">
+  <h2 style="font-size:17px;font-weight:700;margin-bottom:10px">Questions to Think About Beforehand</h2>
+  <p style="font-size:13px;color:#555;margin-bottom:12px">No scripted answers needed — but having a story or data point ready for these will make your responses land harder.</p>
+
+  <div class="think-q"><div class="tq">What does the average site's tech stack look like when they first come to you?</div><div class="tw">Grounds the audience in the problem before you describe the solution.</div></div>
+  <div class="think-q"><div class="tq">Do you have real numbers on time saved or revenue recovered after implementation?</div><div class="tw">Specific platform data is more powerful than any industry stat.</div></div>
+  <div class="think-q"><div class="tq">What's one technology belief in this industry that you think is wrong?</div><div class="tw">Contrarian round — have your answer ready. The bolder, the better.</div></div>
+  <div class="think-q"><div class="tq">Where is AI actually working in your platform or customers' workflows?</div><div class="tw">Honesty builds credibility. "We're early" is a great answer.</div></div>
+  <div class="think-q"><div class="tq">What have you NOT solved yet?</div><div class="tw">Vulnerability from a founder/CEO is compelling. Shows you're still pushing.</div></div>
+
+  </div></div>
+
+  </div>
+
+  <div class="panel" id="info">
+
+  <div class="card"><div class="card-body">
+  <h2 style="font-size:17px;font-weight:700;margin-bottom:12px">Day-Of Details</h2>
+  <div class="log-grid">
+  <div><div class="ll">Location</div><div class="lv">Revival Research office</div></div>
+  <div><div class="ll">Time</div><div class="lv">Tuesday, 1:00 PM</div></div>
+  <div><div class="ll">Recording</div><div class="lv">In-person, professional camera crew</div></div>
+  <div><div class="ll">Duration</div><div class="lv">~60 min → edited to ~45 min</div></div>
+  <div><div class="ll">Format</div><div class="lv">Seated panel, 4 speakers, conversational</div></div>
+  <div><div class="ll">Wardrobe</div><div class="lv">Professional-casual. Solid colors. Avoid small patterns/stripes.</div></div>
+  </div>
+  <p style="font-size:12px;color:#888">Water and everything you need on set. Crew handles all tech — just show up and be yourselves.</p>
+  </div></div>
+
+  <div class="card"><div class="card-body">
+  <h2 style="font-size:17px;font-weight:700;margin-bottom:12px">How We Want This to Feel</h2>
+  <div class="tone-grid">
+  <div class="tone-yes"><h4>✓ Going For</h4>
+  <div>Conversational, natural</div>
+  <div>Honest about challenges — not just wins</div>
+  <div>Industry-smart, specific, opinionated</div>
+  <div>Stories and real examples</div>
+  <div>Technology connected to real outcomes</div>
+  </div>
+  <div class="tone-no"><h4>✗ Avoiding</h4>
+  <div>Sales pitch or demo language</div>
+  <div>Buzzwords without substance</div>
+  <div>Scripted or rehearsed delivery</div>
+  <div>Features without the "so what"</div>
+  <div>Talking past the listener</div>
+  </div>
+  </div>
+  <div style="background:#f8f9fb;border-radius:7px;padding:12px 16px">
+  <p style="font-size:13px;color:#444;margin:0">The best promotion is expertise. When you discuss integration challenges, AI's limitations, or why eSource adoption is low — from deep experience — the audience trusts you. <strong>That trust is worth more than any product mention.</strong></p>
+  </div>
+  </div></div>
+
+  <div class="card"><div class="card-body">
+  <h2 style="font-size:17px;font-weight:700;margin-bottom:8px">Speaker Color Key</h2>
+  <p style="font-size:13px;color:#555;margin-bottom:10px">Throughout this brief, questions are tagged by who they're directed to:</p>
+  <div class="key-row">
+  <span class="key-tag" style="background:#059669">Rick</span>
+  <span class="key-tag" style="background:#d97706">Jeff</span>
+  <span class="key-tag" style="background:#6366f1">Rick & Jeff</span>
+  <span class="key-tag" style="background:#ec4899">Nicole & Mazhar</span>
+  <span class="key-tag" style="background:#1a1a2e">Everyone</span>
+  </div>
+  </div></div>
+
+  <div class="footer">
+  <h3>We're looking forward to this conversation.</h3>
+  <p>Questions? Reach out to the Revival Research team anytime before Tuesday.</p>
+  <div class="sm">Research Realm — A Revival Research Podcast</div>
+  </div>
+
+  </div>
+
+  </div>
+
+  <script>
+    function showTab(id) {
+      document.querySelectorAll('.panel').forEach((panel) => panel.classList.remove('on'));
+      document.querySelectorAll('.tab').forEach((tab) => tab.classList.remove('on'));
+      document.getElementById(id).classList.add('on');
+
+      document.querySelectorAll('.tab').forEach((tab) => {
+        if (tab.textContent.toLowerCase().includes(id === 'flow' ? 'episode' : id === 'data' ? 'industry' : id === 'prep' ? 'preparation' : 'logistics')) {
+          tab.classList.add('on');
+        }
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleAcc(btn) {
+      btn.parentElement.classList.toggle('open');
+    }
+  </script>
+</body>
+</html>
