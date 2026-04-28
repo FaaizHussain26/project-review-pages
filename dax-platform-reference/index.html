@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DAX Platform - Product & Feature Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --surface-2: #eef1f6;
+  --border: #dde2ea;
+  --border-2: #c8d0db;
+  --text: #111827;
+  --muted: #5a6a7e;
+  --dim: #8a96a4;
+  --blue: #1d6fe8;
+  --blue-bg: #deeafd;
+  --green: #059669;
+  --green-bg: #d1fae5;
+  --amber: #d97706;
+  --amber-bg: #fef3c7;
+  --purple: #7c3aed;
+  --purple-bg: #ede9fe;
+  --gray-bg: #f0f3f7;
+  --pctms: #0891b2;
+  --ctms: #2563eb;
+  --ops: #ea580c;
+  --ai: #7c3aed;
+  --r: 8px;
+  --rl: 12px;
+}
+body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; }
+
+.top-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(245, 247, 250, 0.97); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border); height: 60px;
+  display: flex; align-items: center; padding: 0 28px; gap: 20px;
+}
+.logo { font-size: 16px; font-weight: 800; letter-spacing: -0.3px; white-space: nowrap; }
+.logo em { color: var(--blue); font-style: normal; }
+.search-wrap { flex: 1; max-width: 380px; position: relative; }
+.search-wrap input {
+  width: 100%; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 7px 12px 7px 34px;
+  font-size: 13px; color: var(--text); font-family: inherit; outline: none; transition: border 0.15s;
+}
+.search-wrap input:focus { border-color: var(--blue); }
+.search-wrap input::placeholder { color: var(--dim); }
+.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--dim); font-size: 13px; pointer-events: none; }
+.filters { display: flex; gap: 6px; margin-left: auto; }
+.fbtn {
+  padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+  border: 1px solid var(--border); background: transparent; color: var(--muted);
+  cursor: pointer; font-family: inherit; transition: all 0.15s; white-space: nowrap; letter-spacing: 0.3px;
+}
+.fbtn:hover { background: var(--surface); color: var(--text); }
+.fbtn.active { background: var(--surface-2); color: var(--text); border-color: var(--active-c, var(--blue)); color: var(--active-c, var(--blue)); }
+
+.main { padding: 80px 28px 60px; max-width: 1360px; margin: 0 auto; }
+
+.hero { padding: 32px 0 28px; border-bottom: 1px solid var(--border); margin-bottom: 28px; }
+.hero h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
+.hero h1 span { color: var(--blue); }
+.hero p { color: var(--muted); font-size: 14px; max-width: 620px; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 36px; }
+.scard { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 16px 14px; text-align: center; position: relative; overflow: hidden; }
+.scard-btn { cursor: pointer; transition: all 0.15s; }
+.scard-btn:hover { border-color: var(--border-2); transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,0,0,0.06); }
+.scard-active { border-color: var(--border-2); box-shadow: 0 0 0 2px rgba(29,111,232,0.08); background: var(--surface-2); }
+.scard-indicator { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; opacity: 0; transition: opacity 0.15s; }
+.scard-btn:hover .scard-indicator { opacity: 0.4; }
+.scard-active .scard-indicator { opacity: 1; }
+.snum { font-size: 26px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.slabel { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+
+.sec-head { display: flex; align-items: center; gap: 10px; margin: 32px 0 14px; }
+.sec-pip { width: 4px; height: 20px; border-radius: 2px; flex-shrink: 0; }
+.sec-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; }
+.sec-cnt { font-size: 11px; color: var(--dim); border: 1px solid var(--border); border-radius: 8px; padding: 2px 8px; margin-left: 4px; }
+.sec-sub { font-size: 12px; color: var(--dim); margin-left: auto; font-style: italic; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--rl);
+  padding: 20px 20px 50px; cursor: pointer; position: relative;
+  overflow: hidden; transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s ease, border-color 0.18s ease, background 0.18s ease;
+}
+/* Top accent bar */
+.card::before {
+  content: ''; position: absolute; left: 0; top: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--cc), transparent 80%);
+  border-radius: 12px 12px 0 0; opacity: 0.7; transition: opacity 0.2s;
+}
+/* Left accent line */
+.card::after {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: var(--cc); border-radius: 12px 0 0 12px; opacity: 0.6; transition: opacity 0.2s;
+}
+/* Glow on hover */
+.card:hover {
+  border-color: var(--cc);
+  background: var(--surface-2);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px var(--cc), 0 16px 40px color-mix(in srgb, var(--cc) 12%, transparent);
+}
+.card:hover::before { opacity: 1; }
+.card:hover::after { opacity: 1; }
+
+.card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.cat-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--cc); }
+
+/* Status badges - redesigned */
+.badge {
+  font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px;
+  letter-spacing: 0.4px; display: inline-flex; align-items: center; gap: 5px;
+}
+.badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.b-live { background: rgba(52,211,153,0.12); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+.b-live::before { background: #34d399; box-shadow: 0 0 6px #34d399; }
+.b-enhancing { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+.b-enhancing::before { background: #fbbf24; box-shadow: 0 0 6px #fbbf24; }
+.b-building { background: rgba(59,158,255,0.1); color: #3b9eff; border: 1px solid rgba(59,158,255,0.3); }
+.b-building::before { background: #3b9eff; box-shadow: 0 0 6px #3b9eff; }
+.b-planned { background: rgba(74,90,110,0.15); color: #7a8fa6; border: 1px solid rgba(74,90,110,0.3); }
+.b-planned::before { background: #4a5a6e; }
+
+.card-name { font-size: 16px; font-weight: 700; margin-bottom: 5px; line-height: 1.25; transition: color 0.15s; }
+.card:hover .card-name { color: #fff; }
+.card-sub { font-size: 11px; color: var(--dim); margin-bottom: 10px; }
+.card-desc { font-size: 12px; color: var(--muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.card-foot { position: absolute; bottom: 14px; left: 20px; right: 20px; display: flex; align-items: center; justify-content: space-between; }
+
+/* Tags - redesigned with pillar-aware color */
+.card-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.ctag {
+  font-size: 10px; font-weight: 600; padding: 3px 8px;
+  background: color-mix(in srgb, var(--cc) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--cc) 22%, transparent);
+  border-radius: 20px; color: color-mix(in srgb, var(--cc) 80%, #111827);
+  letter-spacing: 0.2px; transition: all 0.15s;
+}
+.card:hover .ctag {
+  background: color-mix(in srgb, var(--cc) 14%, transparent);
+  border-color: color-mix(in srgb, var(--cc) 40%, transparent);
+}
+
+.card-arrow {
+  width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 13px; color: var(--dim); border: 1px solid var(--border);
+  transition: all 0.2s; flex-shrink: 0;
+}
+.card:hover .card-arrow {
+  color: var(--cc); border-color: var(--cc);
+  background: color-mix(in srgb, var(--cc) 10%, transparent);
+  transform: rotate(45deg);
+}
+
+.no-results { display: none; text-align: center; padding: 60px 20px; color: var(--dim); font-size: 14px; }
+
+.detail-layer {
+  position: fixed; inset: 0; background: var(--bg); z-index: 200;
+  overflow-y: auto; display: none;
+}
+.detail-layer.open { display: block; }
+.det-nav {
+  position: sticky; top: 0; background: rgba(245,247,250,0.97); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border); padding: 14px 28px;
+  display: flex; align-items: center; gap: 16px; z-index: 10;
+}
+.back-btn {
+  display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted);
+  cursor: pointer; background: none; border: none; font-family: inherit; padding: 4px 0;
+  transition: color 0.15s;
+}
+.back-btn:hover { color: var(--text); }
+.crumb { font-size: 12px; color: var(--dim); }
+.crumb strong { color: var(--text); font-weight: 600; }
+
+.det-body { max-width: 820px; margin: 0 auto; padding: 44px 28px 100px; }
+.det-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.det-cat { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.det-title { font-size: 34px; font-weight: 800; letter-spacing: -0.6px; line-height: 1.15; margin-bottom: 8px; }
+.det-subtitle { font-size: 15px; color: var(--muted); margin-bottom: 28px; }
+.det-chips { display: flex; gap: 10px; margin-bottom: 40px; flex-wrap: wrap; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted);
+  background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px;
+}
+.chip-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+.section { margin-bottom: 36px; }
+.sec-title {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--dim); margin-bottom: 12px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.sec-body { font-size: 14px; color: var(--muted); line-height: 1.8; }
+.sec-body strong { color: var(--text); font-weight: 600; }
+.sec-body p { margin-bottom: 10px; }
+.sec-body ul { padding-left: 18px; margin-top: 8px; }
+.sec-body li { margin-bottom: 6px; }
+
+.complexity-row { display: flex; align-items: center; gap: 8px; }
+.cx-bar { display: flex; gap: 3px; }
+.cx-pip { width: 18px; height: 5px; border-radius: 3px; }
+.cx-label { font-size: 12px; color: var(--dim); }
+
+.det-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border); }
+.dtag { font-size: 12px; padding: 4px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; color: var(--muted); }
+
+.note-box { background: var(--surface-2); border: 1px solid var(--border-2); border-radius: var(--r); padding: 14px 16px; margin-bottom: 36px; }
+.note-box p { font-size: 13px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="logo">DAX <em>Platform</em></div>
+  <div class="search-wrap">
+    <span class="search-icon">&#9906;</span>
+    <input id="srch" type="text" placeholder="Search products, features, modules..." oninput="doFilter()">
+  </div>
+  <div class="filters">
+    <button class="fbtn active" style="--active-c:#111827" onclick="setCat('all',this)">All</button>
+    <button class="fbtn" style="--active-c:#0891b2" onclick="setCat('pctms',this)">PCTMS</button>
+    <button class="fbtn" style="--active-c:#2563eb" onclick="setCat('ctms',this)">CTMS</button>
+    <button class="fbtn" style="--active-c:#ea580c" onclick="setCat('ops',this)">Operations</button>
+    <button class="fbtn" style="--active-c:#7c3aed" onclick="setCat('ai',this)">AI Features</button>
+  </div>
+</header>
+
+<main class="main" id="list-view">
+  <div class="hero">
+    <h1>DAX Platform <span>Product Intelligence</span></h1>
+    <p>Complete reference for every product, module, and AI feature being built. Click any item for a full breakdown of what it is, current state, and what needs to be built.</p>
+  </div>
+  <div class="stats-grid" id="stats-grid"></div>
+  <div id="content"></div>
+  <div class="no-results" id="no-res">No items match your search.</div>
+</main>
+
+<div class="detail-layer" id="det-layer">
+  <div class="det-nav">
+    <button class="back-btn" onclick="closeDetail()">&#8592;&nbsp; Back to all products</button>
+    <div class="crumb" id="det-crumb"></div>
+  </div>
+  <div class="det-body" id="det-body"></div>
+</div>
+
+<script>
+const CATS = {
+  pctms: { label: 'Pre-Clinical Trial Management', short: 'PCTMS', color: '#0891b2' },
+  ctms:  { label: 'Clinical Trial Management / Site Ops', short: 'CTMS / SOMS', color: '#2563eb' },
+  ops:   { label: 'Operational Modules', short: 'Operations', color: '#ea580c' },
+  ai:    { label: 'AI-Enabled Features', short: 'AI Features', color: '#7c3aed' }
+};
+
+const SL = { live:'Live', enhancing:'Enhancing', building:'Building', planned:'Planned' };
+const CX_LABELS = ['','Very Low','Low','Medium','High','Very High'];
+
+const ITEMS = [
+  {
+    id:'syncora-core', cat:'pctms', status:'live', cx:4,
+    name:'Syncora Core', sub:'Pre-Clinical Trial Management System',
+    delivery:'Standalone web application',
+    short:'The flagship pre-clinical trial management system for research sites. Manages all activities before a trial formally activates: startup workflows, feasibility, and early site administration.',
+    what:'Syncora is a purpose-built PCTMS (Pre-Clinical Trial Management System) for clinical research sites. It covers everything before a trial is officially activated: feasibility evaluations, regulatory startup task tracking, site qualification visits, and early study administration. Most CTMS products on the market focus only on post-activation. Syncora fills this gap and positions DAX in the study lifecycle before any competitor is even present.',
+    now:'Live and deployed across multiple Revival Research sites. Core study management, site workflow tools, and a basic CRM are operational. Used daily by site teams managing pre-activation pipelines.',
+    build:'Primary enhancement: CRM module (see Syncora CRM). Secondary priorities include a scalability overhaul for multi-site portfolio management, sponsor and CRO read-only access portals, study startup timeline automation with milestone tracking, and a REST API layer so Syncora data can feed into the future CTMS Core and AI modules.',
+    tech:'Needs modular architecture refactoring so individual features (CRM, feasibility tools, reporting) can be upgraded independently without touching core logic. Multi-tenancy design for managing multiple sites under one organization. RESTful API layer is essential for downstream integration with every other DAX module.',
+    comp:'Most CTMS vendors (Medidata, Veeva, RealTime eClinical) focus entirely on post-activation. Very few tools exist specifically for the pre-activation phase. Syncora competes in an underserved segment with no dominant incumbent.',
+    tags:['PCTMS','study startup','feasibility','site management','multi-site','pre-activation']
+  },
+  {
+    id:'syncora-crm', cat:'pctms', status:'enhancing', cx:3,
+    name:'Syncora CRM', sub:'Sponsor and CRO Relationship Management',
+    delivery:'Module within Syncora',
+    short:'A clinical-research-specific CRM embedded in Syncora. Manages sponsor and CRO relationships, study opportunity pipelines, outreach sequences, and contract progression.',
+    what:'A purpose-built CRM for clinical research sites managing their business development pipeline. Unlike general CRMs designed for sales teams, this is tailored to the sponsor/CRO relationship lifecycle: first contact and feasibility discussions, protocol negotiations, budget reviews, and contract execution. Every study opportunity is tracked from initial lead through site activation.',
+    now:'Basic contact and study tracking exists in Syncora. Missing: structured pipeline views, configurable deal stages, automated follow-up logic, email integration, communication logs tied to specific studies, and BD performance reporting.',
+    build:'Full pipeline management with Kanban board view and configurable deal stages. Sponsor and CRO profile pages with complete interaction history. Gmail and Outlook integration for email tracking. Automated follow-up reminders. BD performance dashboards showing win rate, conversion time, and revenue pipeline by therapeutic area. Document management for proposals, NDAs, and contracts.',
+    tech:'Contact and account data model with study opportunity as the core entity. Gmail and Outlook OAuth integration for tracking email threads. Kanban pipeline with drag-and-drop stage movement. Integration with BD Director workflows. Notification system for follow-up reminders.',
+    comp:'Sites currently use Salesforce, HubSpot, or spreadsheets for BD CRM. None are built for the sponsor/CRO relationship model or the clinical trial study opportunity lifecycle. A CRM built specifically for site business development would be immediately adoptable across any independent site network.',
+    tags:['CRM','pipeline','BD','sponsor management','outreach','business development','Kanban']
+  },
+  {
+    id:'ctms-core', cat:'ctms', status:'building', cx:5,
+    name:'CTMS Core', sub:'Site Operations Management System',
+    delivery:'Standalone web application (platform foundation)',
+    short:'The central hub of the entire DAX platform. A full clinical trial management system built for research sites managing active trials, covering enrollment, scheduling, protocol compliance, and study closeout.',
+    what:'A Clinical Trial Management System built from the site perspective, not the sponsor perspective. Manages every active trial from activation through closeout. Coordinators use it daily to track patient enrollment, schedule visits, document protocol deviations, and maintain site compliance. It is the operational brain of the clinical site and the foundation into which every other DAX module connects.',
+    now:'Does not exist yet. Currently being scoped and architected. This is the highest-priority new product because it becomes the foundation all other modules plug into. Building CTMS Core first is the prerequisite for every other CTMS-category item on this list.',
+    build:'Study dashboard with portfolio-level overview across all active studies. Protocol library with version control and amendment tracking. Patient enrollment tracker with funnel visualization (screened, consented, enrolled, completed, dropped). Visit calendar and scheduling engine. Protocol deviation management with CAPA (Corrective and Preventive Action) workflows. Query management for site-initiated and sponsor-initiated queries. Staff delegation and training record tracking integrated with the Training Portal. Monitoring visit management and preparation tools. Study closeout workflow with documentation checklist.',
+    tech:'Multi-site, multi-tenant architecture from day one. Role-based access control with distinct permission levels for coordinators, investigators, site directors, monitors, and sponsors. 21 CFR Part 11 compliant audit trail for every data change. RESTful API for all major modules so eSource, eICF, payment systems, and AI features can connect. Real-time sync for concurrent multi-user editing.',
+    comp:'RealTime eClinical, Oncore (Advarra), CTMS Hub are the incumbents. Most are legacy systems with poor user experience, expensive licensing, and no AI roadmap. RealTime has been acknowledged as being too embedded in legacy code to innovate rapidly. DAX enters with a modern architecture, no legacy debt, and an AI layer from day one.',
+    tags:['CTMS','enrollment','protocol','compliance','site operations','21CFR','visit scheduling','multi-tenant']
+  },
+  {
+    id:'esource', cat:'ctms', status:'planned', cx:5,
+    name:'eSource', sub:'Electronic Source Data Capture',
+    delivery:'Module within CTMS + standalone',
+    short:'Replaces paper source documents at the clinical site. Clinical staff enter patient visit data directly into structured electronic forms that serve as the legal source record before submission to the sponsor EDC.',
+    what:'eSource is the digital replacement for paper source documents at a clinical trial site. Every patient visit generates source data: vitals, assessments, lab results, adverse events, concomitant medications. eSource captures all of this in structured electronic forms with a full audit trail. It is the legal origin point of all trial data before that data is submitted to the sponsor\'s EDC (Electronic Data Capture) system. Well-implemented eSource eliminates transcription errors, accelerates data cleaning, and reduces the cost of monitoring visits.',
+    now:'Does not exist. Paper source remains the standard at most sites. One of the most technically complex and commercially valuable modules to build.',
+    build:'Visit-by-visit structured data entry with protocol-driven form templates. Required field enforcement with range checks and format validation. Multi-user concurrent editing with conflict resolution. Investigator and coordinator e-signatures per ICH E6(R2). Auto-save and offline capability for sites with connectivity issues. Integration with lab data feeds to auto-populate lab result fields. Integration with patient payment triggers (visit completion automatically initiates stipend payment). API connections to major sponsor EDC systems for data export. Full audit trail showing who entered, edited, reviewed, and signed each data point.',
+    tech:'Core challenge: flexibility. Every protocol is different, every sponsor has different data requirements. Forms must be configurable per protocol while maintaining structural integrity for FDA inspection. 21 CFR Part 11 e-signature with immutable audit log. Data versioning so all historical versions of every entry are preserved. HL7 FHIR for lab data imports. EDC API connectors (Medidata, Veeva, REDCap) for structured data export.',
+    comp:'CRIO (Clinical Research IO), RealTime eBinder, Castor EDC are the main eSource tools. All are closed, proprietary systems. The strategic opportunity: build an open eSource that any site can use, and combine it with the eSource Builder (see AI Features section) so templates can be created and exported to other systems, turning DAX into a platform for the broader eSource ecosystem.',
+    tags:['eSource','source data','data capture','21CFR','e-signature','forms','audit trail','EDC integration']
+  },
+  {
+    id:'eisf', cat:'ctms', status:'planned', cx:4,
+    name:'eISF / Regulatory Binder', sub:'Electronic Investigator Site File',
+    delivery:'Module within CTMS',
+    short:'Digital filing system for all regulatory documents required at the clinical site level. Covers IRB approvals, protocol versions, staff CVs, lab certifications, delegation logs, and all GCP-required documentation per ICH E6(R2).',
+    what:'The Electronic Investigator Site File (eISF), also known as the site-level eTMF, is the organized repository of all regulatory documents required by ICH E6(R2) GCP guidelines for every active clinical trial. This includes protocol versions and amendments, IRB/EC approvals, investigator curricula vitae, financial disclosures, laboratory accreditation certificates, staff delegation logs, monitoring visit logs, and all sponsor correspondence. During an FDA inspection, the ISF must be produced immediately and completely. A disorganized or incomplete ISF is one of the most common causes of FDA warning letters.',
+    now:'Does not exist as a system. Sites maintain ISFs in shared drives, physical binders, or expensive dedicated tools from vendors like Florence.',
+    build:'Document repository with folder structure mirroring ICH E6(R2) ISF requirements. Version control for protocol amendments and regulatory document updates. Expiration date tracking with automated alerts at 90, 30, and 7 days (CVs expire every 2 years, lab certs annually, IRB approvals annually). Electronic signature routing for delegation logs and documents requiring co-signatures. Sponsor and CRO read-only access portal for remote monitoring. FDA inspection export package generator that produces a complete, organized archive.',
+    tech:'Document management system with GCP-mandated folder taxonomy as the default structure. Metadata tagging: document type, study association, version, effective date, expiration date, owner. E-signature workflow engine with 21 CFR Part 11 compliance. OCR for searching within scanned documents. Bulk upload capability for initial site setup migration from paper or shared drives.',
+    comp:'Florence eBinders is the dominant product for sites. Trial Interactive and Veeva Vault eTMF are sponsor-focused tools. Florence has wide adoption but poor UX and high per-site pricing. An integrated, affordable eISF built natively into DAX eliminates the need for a separate Florence subscription for every study, representing immediate cost savings for the site.',
+    tags:['eISF','eTMF','regulatory','GCP','ICH E6R2','compliance','IRB','Florence alternative','documents']
+  },
+  {
+    id:'patient-payment', cat:'ctms', status:'planned', cx:4,
+    name:'Patient Payment System', sub:'Participant Compensation Management',
+    delivery:'Module within CTMS',
+    short:'Manages clinical trial participant compensation. Handles protocol-specific stipend schedules, visit completion triggers, electronic payment disbursement, and annual tax documentation for participants.',
+    what:'Clinical trial participants are compensated for their time and inconvenience. Managing this compensation is administratively complex: each protocol has a different payment schedule, different visit types trigger different amounts, and sites must track owed versus paid for every participant in every active study simultaneously. The Patient Payment System connects visit completion data from the CTMS directly to payment disbursement through electronic payment rails, eliminating spreadsheet tracking and reducing both errors and administrative burden.',
+    now:'Does not exist. Sites track payments in spreadsheets and issue paper checks manually. This is one of the most labor-intensive administrative tasks at a busy research site.',
+    build:'Payment rules engine that stores protocol-specific amounts per visit type (screening visit, treatment visit, end-of-study visit) and procedure type. Automatic payment triggers when coordinators confirm visit completion in the CTMS. Participant identity verification and payment method enrollment. Multiple payment options: ACH bank transfer, prepaid debit card (Visa/Mastercard), or check. Real-time payment status tracking per participant per study. Monthly and annual reconciliation reporting. 1099 form generation for US participants who receive over $600 in a calendar year.',
+    tech:'Integration with Greenphire ClinCard API or direct prepaid card issuance through a bank partner. ACH processing via Stripe Treasury or a banking-as-a-service provider. HIPAA-compliant participant PII storage and encryption. KYC (Know Your Customer) verification for compliance. Tax ID collection workflow and IRS 1099 generation.',
+    comp:'Greenphire ClinCard is the dominant market player. Sponsors and sites pay 2-5% per transaction in fees. An integrated, lower-cost alternative would be immediately attractive to site networks running hundreds of participants annually. The key requirement is either obtaining Money Services Business licensing or partnering with a licensed payment processor.',
+    tags:['patient payments','stipends','compensation','ACH','ClinCard alternative','finance','1099','participant']
+  },
+  {
+    id:'engage', cat:'ctms', status:'planned', cx:4,
+    name:'Engage', sub:'Participant Retention Platform',
+    delivery:'Module within CTMS + participant-facing portal',
+    short:'Systematic participant retention platform that keeps enrolled trial participants engaged and compliant through the full study duration via automated reminders, protocol education, and dropout risk monitoring.',
+    what:'Participant dropout is one of the most costly problems in clinical research. Each dropout delays study completion, reduces statistical power, and may require recruiting and screening replacement participants at significant expense. Engage is a retention system that builds ongoing relationships with enrolled participants through structured communication: automated visit reminders, educational content about the study they are in, milestone congratulations, and proactive check-ins. Coordinators get visibility into which participants are at dropout risk before it happens, enabling targeted intervention.',
+    now:'Does not exist. Sites rely on manual coordinator phone calls for reminders. No systematic retention program exists at most sites.',
+    build:'Participant-facing mobile web portal (no app installation required, works on any smartphone browser). Automated SMS and email reminders for upcoming visits (72h, 24h, and 2h before). Protocol-specific educational content delivered by study week. Study milestone updates to participants ("You have completed 4 of 8 visits, great work!"). Post-visit check-in surveys for satisfaction tracking. Coordinator dashboard with participant engagement scores and automated dropout risk alerts based on non-response patterns.',
+    tech:'Twilio for SMS delivery. SendGrid for email. Progressive Web App (PWA) for the participant portal for cross-device compatibility without requiring app store installation. HIPAA-compliant message storage with audit trail. Multilingual support starting with English and Spanish. Integration with CTMS visit schedule for automated trigger timing.',
+    comp:'Endpoint Clinical, Science37, and Lightship focus on retention for decentralized trials. No dominant engagement tool exists for traditional brick-and-mortar sites. An integrated engagement module built natively into the site CTMS would be immediately deployable without the expensive integrations that standalone retention tools require.',
+    tags:['patient engagement','retention','dropout prevention','reminders','participant portal','SMS','ePRO','satisfaction']
+  },
+  {
+    id:'telemedicine', cat:'ctms', status:'planned', cx:4,
+    name:'Remote Visit / Telemedicine', sub:'Decentralized Trial Visit Module',
+    delivery:'Module within CTMS',
+    short:'Enables protocol-permitted clinical trial visits to be conducted remotely via HIPAA-compliant video. Supports remote vitals collection, electronic patient-reported outcomes, and full eSource documentation of virtual visits.',
+    what:'Decentralized clinical trials (DCTs) are growing rapidly. Sponsors increasingly allow certain visits to be conducted remotely: screening eligibility interviews, follow-up safety assessments, patient-reported outcome (PRO) collection, and medication counseling. The Remote Visit module enables sites to conduct these visits in a compliant, documented manner, managing them within the same visit calendar as in-person visits. The patient experience improves, travel burden decreases, and site capacity expands without adding physical space.',
+    now:'Does not exist. Sites either avoid remote visits entirely or use standard consumer video tools like Zoom that are not HIPAA-compliant and leave no audit trail.',
+    build:'HIPAA-compliant video conferencing integrated directly into the CTMS visit calendar. Pre-visit technology check for participants (camera, audio, internet speed). Integration with consumer wearable devices for remote vitals capture (blood pressure, SpO2, weight, heart rate). ePRO questionnaire delivery and completion tracking. Real-time eSource documentation during video visits with investigator review and co-sign capability. Post-visit automated summary. Session recording with participant consent management.',
+    tech:'Zoom for Healthcare SDK or Doxy.me white-label integration with a signed Business Associate Agreement (BAA). WebRTC fallback for participants using incompatible browsers. Withings, Fitbit, and iHealth device SDKs for remote vitals. FDA-recognized ePRO standards (BYOD or site-provided device) for patient-reported outcomes.',
+    comp:'Science37, Medable, Lightship are pure-play DCT companies valued at hundreds of millions. Their platforms are expensive, sponsor-contracted, and require extensive custom integration per study. A site-owned telemedicine module built into DAX gives sites control over their remote visit program without depending on sponsor-funded DCT vendors.',
+    tags:['telemedicine','DCT','remote visits','ePRO','decentralized','video','wearables','HIPAA']
+  },
+  {
+    id:'patient-comms', cat:'ctms', status:'planned', cx:3,
+    name:'Patient Communication Hub', sub:'Unified Participant Messaging',
+    delivery:'Module within CTMS',
+    short:'HIPAA-compliant two-way communication platform for coordinators and participants. Unifies SMS, email, and in-app messaging with a full audit trail, message templates, and automated triggers from CTMS events.',
+    what:'Coordinating with clinical trial participants requires constant communication: appointment confirmations, pre-visit preparation instructions, lab result notifications, consent reminders, and general check-ins. Currently, coordinators use personal phones and personal email accounts, creating HIPAA compliance exposure and leaving no traceable communication record. The Patient Communication Hub gives every coordinator a single, compliant inbox for all participant messaging across channels, with every message logged and linked to the participant\'s study record.',
+    now:'Calling is partially addressed by Calendex. No unified text or email system exists. Coordinators using personal devices is a documented compliance risk.',
+    build:'Coordinator-facing unified inbox aggregating all participant conversations across SMS, email, and in-app channels in one view. Two-way SMS with opt-out management (TCPA compliance). Templated message library organized by study, visit type, and trigger event. Automated message sequences: 72h before visit: preparation instructions, 24h: confirmation request, 1h: parking and arrival instructions. Bulk messaging for study-wide announcements. Read receipt and response tracking. Full conversation archive permanently tied to the participant record for audit purposes. Escalation alerts when participants do not respond within defined windows.',
+    tech:'Twilio for SMS. SendGrid for email. Unified message thread data model linking all channels to one participant-study record in the database. HIPAA-compliant storage with encryption at rest and in transit. Integration with Calendex so call records, transcripts, and text messages appear in a single unified communication timeline per participant.',
+    comp:'No HIPAA-compliant, unified communication tool exists specifically for clinical research sites. Sites use personal phones, Gmail, and informal tools. A compliant, integrated communication system solves both a regulatory risk and a major coordinator efficiency problem simultaneously.',
+    tags:['patient communication','SMS','HIPAA','messaging','email','reminders','two-way','Twilio','audit trail']
+  },
+  {
+    id:'eicf', cat:'ctms', status:'planned', cx:4,
+    name:'eICF', sub:'Electronic Informed Consent',
+    delivery:'Module within CTMS + participant-facing interface',
+    short:'Digital informed consent system for clinical trial participants. Structured review, built-in comprehension verification, and legally valid electronic signature replace paper ICF while maintaining full FDA and ICH GCP compliance.',
+    what:'Informed consent is the ethical cornerstone of clinical research. Before enrolling in a trial, every participant must review, understand, and voluntarily sign an Informed Consent Form. The eICF module digitizes this entire process: participants review the consent document section by section on any device, answer comprehension check questions, and provide a legally valid electronic signature witnessed by site staff. When the protocol changes and re-consent is required, the system automatically identifies all affected participants and initiates a new consent workflow. The entire process is logged with millisecond-precision timestamps for regulatory inspection.',
+    now:'Does not exist. Paper ICF is universal at most sites. Re-consent tracking is particularly problematic, often done manually with high risk of missing affected participants.',
+    build:'Consent document builder with section-by-section navigation optimized for participant readability. Comprehension verification questions embedded after each major section. Electronic signature workflow with witness co-sign capability for the coordinator or investigator. Consent version management with automatic identification of participants requiring re-consent when amendments occur. Multi-language support. Integration with CTMS enrollment records. Full audit trail: when each section was opened, how long it was read, when questions were answered, when signed.',
+    tech:'21 CFR Part 11 compliant e-signature. Biometric (fingerprint on mobile) or knowledge-based authentication for participant identity verification. Consent document stored immutably with cryptographic hash after signing. DocuSign Healthcare API or custom signature engine. PDF generation for participants who want a paper copy to keep.',
+    comp:'iMedConsent (Champions Oncology), Veeva Vault eConsent, Medidata eCOA are the major vendors. FDA increasingly encourages electronic consent. An affordable, well-designed eICF built natively into the DAX CTMS eliminates the need for a separate vendor, represents immediate cost savings, and improves re-consent compliance tracking.',
+    tags:['eICF','informed consent','e-signature','21CFR','enrollment','re-consent','compliance','participant']
+  },
+  {
+    id:'lab-int', cat:'ctms', status:'planned', cx:4,
+    name:'Lab Data Integration', sub:'Automated Laboratory Result Import',
+    delivery:'Integration middleware module',
+    short:'Bidirectional data pipeline connecting external laboratory systems to eSource and CTMS. Lab results automatically populate into source records, eliminating manual transcription and the errors it creates.',
+    what:'Every clinical trial visit includes laboratory testing: complete blood count, comprehensive metabolic panel, liver function tests, and protocol-specific assays. Lab results currently arrive via fax or paper printout. Coordinators transcribe them manually into source documents, a process that is slow and introduces transcription errors that become queries from the sponsor monitor. Lab Data Integration automates this: results flow electronically from the laboratory information system (LIS) directly into the appropriate fields in the patient\'s eSource record, with coordinators reviewing and confirming rather than transcribing.',
+    now:'Does not exist. Manual lab result transcription is universal at clinical sites. This is responsible for a significant proportion of all data queries generated by sponsors.',
+    build:'HL7 v2.x message listener for results from commercial labs (Quest, LabCorp) and on-site analyzers. FHIR R4 REST API for modern lab systems supporting it. Result normalization and LOINC code mapping for standardized identification. Auto-population of lab fields in eSource with appropriate data types. Reference range flagging (normal, abnormal, critical) based on site-specific and sex/age-adjusted normals. Critical value alerting with escalation to the investigator of record. Data receipt audit trail showing source, timestamp, and acceptance status.',
+    tech:'HL7 interface engine (either Mirth Connect or custom). FHIR R4 REST API client. LOINC code database maintained with current versions. The challenge: handling both structured numeric results and unstructured narrative interpretations. Direct integration with Quest and LabCorp portal APIs and their specific connectivity programs.',
+    comp:'No site-focused lab integration middleware exists at accessible pricing. Sites either use lab-specific web portals for manual downloads or depend on lab-specific integrations in expensive enterprise CTMS platforms. A universal lab integration layer would immediately reduce coordinator transcription time by an estimated 30-40% per active study.',
+    tags:['lab integration','HL7','FHIR','lab results','Quest','LabCorp','eSource','transcription','LOINC']
+  },
+  {
+    id:'analytics', cat:'ctms', status:'planned', cx:4,
+    name:'Unified Analytics Dashboard', sub:'Platform-Wide Data Intelligence',
+    delivery:'Cross-platform visualization layer',
+    short:'Central data visualization hub aggregating real-time metrics from every DAX module into a single view. Provides KPIs for enrollment velocity, protocol compliance, revenue, and staff productivity at both study and portfolio levels.',
+    what:'When all clinical operations run on one platform, you gain something no point-solution can offer: complete, unified operational visibility. The Unified Analytics Dashboard aggregates data from every DAX module in real time: enrollment from the CTMS, compliance from the eISF, billing from Invoicing, call performance from Calendex, and more. Site directors see the full picture of their research organization. Portfolio managers see across all studies. Sponsors get clean reporting without requesting manual exports.',
+    now:'Does not exist as a unified system. Looker Studio was evaluated as a reporting layer. Each module currently reports independently with no aggregation.',
+    build:'Real-time data pipeline from all DAX module databases into a central data warehouse. Executive dashboard with portfolio-level KPIs. Study-level operations dashboard: enrollment funnel, visit completion rate by study week, query resolution time, budget vs actuals. Staff productivity metrics: patient contacts per coordinator, visit completion rate, data entry speed. Sponsor-facing read-only reporting portal. Custom report builder for ad hoc analysis. Automated report scheduling with email delivery. PDF export for site board meetings and sponsor progress reports.',
+    tech:'Central data warehouse using BigQuery or Snowflake. ETL pipelines from each module database with defined data contracts. Visualization layer using Chart.js for custom charts or Looker Studio embed for ad hoc exploration. Role-based dashboard access: executive view, coordinator view, sponsor view, monitor view. Real-time streaming for operational metrics with appropriate latency for analytical metrics.',
+    comp:'Medidata and Veeva have powerful sponsor-side analytics. No affordable, site-focused analytics platform exists. Sites currently produce reports manually in Excel. An integrated, clinical-research-specific analytics layer built into DAX would be a major selling point for any site director trying to manage a growing portfolio.',
+    tags:['analytics','dashboards','KPIs','reporting','enrollment metrics','portfolio','Looker Studio','data visualization']
+  },
+  {
+    id:'employee-portal', cat:'ops', status:'building', cx:3,
+    name:'Employee Portal', sub:'Internal Company Platform',
+    delivery:'Standalone internal web application',
+    short:'Centralized internal platform for all employees across Revival Research and Minerva. One place for HR, training, documents, company communications, org chart, and announcements replacing scattered tools and informal systems.',
+    what:'The Employee Portal replaces scattered shared drives, informal WhatsApp updates, and verbal communication with a single organized internal platform. Every employee at Revival Research and Minerva accesses it for company policies, scheduling, training, org chart, HR tasks, and company news. It handles the complexity of a distributed organization spanning multiple US states and Pakistan, with separate branding and access rules for Revival Research versus Minerva while sharing infrastructure.',
+    now:'Active development underway. A 16-PRD documentation effort is in progress with Paychex as the payroll system of record. Auto-updating org chart is being built with the Paychex API, n8n automation backend, and Google Sheets as the organizational hierarchy configuration layer.',
+    build:'Home dashboard with personalized announcements, pending action items, and quick links. Document library for company policies, SOPs, compliance forms, and templates. Auto-updating org chart pulling employee hierarchy from Paychex API. Employee directory with profile pages, roles, and contact information. Company announcements and news feed. Separate brand experiences for Revival Research and Minerva users while sharing the same underlying infrastructure and database.',
+    tech:'Paychex API integration for employee data synchronization and org hierarchy maintenance. n8n workflow automation for data sync jobs and notifications. Google Sheets as an accessible configuration interface for org hierarchy adjustments without code deploys. Role-based access control distinguishing Revival Research vs Minerva, manager vs individual contributor, US vs Pakistan teams.',
+    comp:'BambooHR, Rippling, and Gusto are general HR platforms that do not understand clinical research org structures, the Revival + Minerva dual-entity complexity, or the specific workflows of a CRO site network. A custom portal built specifically for this organization\'s structure delivers exactly what generic platforms cannot.',
+    tags:['employee portal','intranet','HR','SOPs','documents','org chart','Paychex','n8n','Revival','Minerva']
+  },
+  {
+    id:'hrms', cat:'ops', status:'building', cx:4,
+    name:'HRMS', sub:'Human Resource Management System',
+    delivery:'Module within Employee Portal',
+    short:'Full HR management covering payroll sync, time tracking, attendance, leave management, performance review cycles, and compliance reporting for both the US Revival Research team and the Pakistan-based Minerva team.',
+    what:'The HRMS is the operational backbone of workforce management. It actively manages the full HR lifecycle: clock-in/clock-out, leave requests and approvals, Paychex payroll data synchronization, performance review cycles, salary history tracking, and compliance reporting. It handles the particular complexity of managing two distinct workforces operating under different labor laws: US-based Revival Research staff governed by FLSA and state law, and Pakistan-based Minerva call center staff governed by Pakistani labor law. Both teams deserve a proper, fair system.',
+    now:'Paychex handles US payroll processing. Time tracking and attendance for the Pakistan team is partially manual and inconsistent. Performance management does not exist as a formal structured process at either organization.',
+    build:'Browser-based time clock with check-in/check-out and IP address logging for verification. Leave request and approval workflow with leave type categories (PTO, sick, personal). Attendance reporting with late arrival and absenteeism analysis. Paychex API synchronization for payroll records and compensation data display in employee profiles. Performance review cycle builder with self-evaluation, manager evaluation, and calibration stages. Compensation history tracking. Offer letter and policy document e-signing. Compliance alerts for expiring employment documents, visa renewals, and contract renewals.',
+    tech:'Paychex API for payroll data pull and employee record maintenance. Browser-based time clock with IP logging for verification. Separate time tracking rule sets for US FLSA compliance (overtime thresholds, exempt vs non-exempt) and Pakistani labor law (different overtime rules, different leave entitlements). Email notifications for leave approvals, review deadlines, and compliance expiration alerts.',
+    comp:'Rippling and Gusto are strong US tools but are not designed for mixed US-Pakistan workforce management with different labor law contexts or the clinical research shift structures of sites. A custom HRMS gives full control over the nuances specific to this organization.',
+    tags:['HRMS','payroll','time tracking','attendance','leave management','performance reviews','Paychex','Pakistan','US']
+  },
+  {
+    id:'training-portal', cat:'ops', status:'planned', cx:3,
+    name:'Training Portal', sub:'Internal Learning Management System',
+    delivery:'Module within Employee Portal',
+    short:'Internal LMS for onboarding and ongoing staff training. Covers GCP certification, SOP training, software tutorials, protocol-specific education, and compliance certification tracking with automated expiration alerts.',
+    what:'Clinical research has among the highest ongoing training compliance requirements of any industry. Every staff member must hold valid GCP certification. Every protocol requires documented site-specific training before any participant contact. Every SOP update requires documented re-training before the new procedure can be used. The Training Portal manages all of this systematically: delivering content, tracking completion, issuing certificates, and alerting management when certifications approach expiration. Completion data feeds directly to the HRMS training record and the eISF delegation log.',
+    now:'Does not exist as a system. Training is conducted ad hoc through live presentations and PDF document sharing. Certification tracking is manual and frequently incomplete.',
+    build:'Course builder with video, PDF document, slide deck, and quiz modules configurable per course. Course assignment engine: by role (all coordinators get GCP), by study (all assigned staff get protocol training), and by team. Completion tracking with time-spent logging and required minimum passing score. Certificate generation in PDF format with digital timestamp and site seal. Protocol-specific training tracks that are automatically assigned when a new study is added to the CTMS. Mandatory training compliance alerts at 30 days before expiration. Training history exportable per employee for the delegation log.',
+    tech:'Video hosting on S3 or Vimeo API. Custom quiz engine with configurable pass thresholds and question randomization. PDF certificate generation with site letterhead and digital signature. Integration with HRMS for automatic employee training record updates on completion. Integration with CTMS for protocol-specific training auto-assignment when a study is activated.',
+    comp:'TalentLMS and Cornerstone OnDemand are expensive general LMS platforms that require extensive customization for clinical research. No affordable LMS with pre-loaded GCP content that connects training records directly to clinical research delegation log requirements exists in the market. The Training Portal has potential as a standalone product for the broader site network market beyond internal use.',
+    tags:['LMS','training','GCP','onboarding','certifications','compliance','e-learning','SOPs','delegation log']
+  },
+  {
+    id:'inventory', cat:'ops', status:'planned', cx:3,
+    name:'Inventory Management', sub:'Clinical Site Asset Tracking',
+    delivery:'Standalone module',
+    short:'Tracks all physical assets and consumables across clinical sites. Covers investigational product chain-of-custody, lab supplies, equipment, and PPE with real-time stock levels, expiration date alerts, and regulatory-compliant accountability logging.',
+    what:'Clinical sites manage substantial quantities of physical materials: investigational drugs, lab specimen kits, collection tubes, centrifuges, ECG machines, PPE, and general office supplies. For investigational product (IP) specifically, FDA regulations under 21 CFR Part 312 require meticulous chain-of-custody documentation from initial receipt through final disposition (dispensed to participant, returned to sponsor, or destroyed). The Inventory Management System creates digital visibility into all physical assets with the compliance rigor clinical research demands and eliminates the paper logs and spreadsheets currently used.',
+    now:'Does not exist. Sites use paper IP accountability logs and spreadsheets for supply tracking. Both approaches are prone to errors and time-consuming for audits.',
+    build:'Item catalog with SKUs and categories: investigational product, lab supply, equipment, general. Location-based stock levels per site and per storage area (including cold-chain storage with temperature logger integration). Expiration date tracking with automated alerts at 30, 7, and 1 day advance notice. Chain-of-custody log for IP: received, stored, dispensed to specific participants, returned to sponsor, or destroyed with destruction documentation. Barcode and QR code scanning via mobile device camera. Low-stock reorder triggers that create automatic purchase requisitions in the Ordering System. IP accountability reconciliation report formatted for sponsor monitoring visits.',
+    tech:'Mobile camera barcode scanning using QuaggaJS or ZXing library. Real-time stock database with optimistic locking to prevent concurrent update conflicts. Temperature data logger API integration for cold-chain storage monitoring. Protocol-specific dispensing records linked to CTMS patient visit records for IP traceability.',
+    comp:'No clinical-research-specific inventory system exists at accessible price points. Sites use FishBowl Inventory, generic ERP systems, or paper. An IP-compliant inventory system with chain-of-custody logging tied to patient visits would immediately differentiate DAX for any serious research site and is directly usable as a standalone product for the site market.',
+    tags:['inventory','IP tracking','chain of custody','lab supplies','barcode','expiration tracking','21CFR','clinical sites']
+  },
+  {
+    id:'ordering', cat:'ops', status:'planned', cx:3,
+    name:'Ordering System', sub:'Procurement and Purchase Management',
+    delivery:'Module within Employee Portal',
+    short:'Digital procurement portal for creating, routing for approval, and tracking purchase orders across supplies, equipment, and services. Integrates with Inventory Management for auto-triggered reorders when stock levels fall below threshold.',
+    what:'Clinical sites purchase continuously: lab kits from sponsors, consumable supplies from vendors, equipment, PPE, and services. Managing this procurement without a system means informal requests via text message, unclear approval chains, and zero visibility into organizational spend. The Ordering System creates a formal, documented procurement workflow from initial requisition through delivery confirmation, with budget allocation by study and department and full reporting for financial management.',
+    now:'A digital procurement portal was built using n8n webhooks and Google Sheets. This needs to be formalized into a proper database-backed module with full audit trail and integration with Inventory Management for automated low-stock triggers.',
+    build:'Purchase requisition form with category, vendor, description, quantity, estimated cost, and budget allocation. Approval workflow engine configurable by dollar threshold and category (clinical supplies require investigator approval, general supplies require operations manager approval). Vendor catalog with negotiated pricing agreements. PO generation and PDF export with site purchase order number. Order status tracking through all stages: pending approval, approved, submitted to vendor, shipped, received. Receiving confirmation with automatic inventory stock level update. Invoice matching against PO for discrepancy flagging. Budget utilization reports by study and department.',
+    tech:'Migrates from n8n and Google Sheets to a proper relational database backend. Vendor catalog database with contract pricing. PDF PO generation using a template engine. Email notifications at each approval workflow stage. Budget database with study and department allocation logic and remaining balance tracking.',
+    comp:'Sites use Procurify, Coupa, or entirely informal processes for procurement. None understand the clinical research context of study-cost allocation, sponsor-supplied versus site-purchased items, or the distinction between clinical and operational supply categories. The combination of Inventory Management plus Ordering System creates a uniquely capable clinical operations supply chain.',
+    tags:['procurement','ordering','purchase orders','supply chain','budget','approval workflow','vendor management']
+  },
+  {
+    id:'protolink', cat:'ops', status:'live', cx:2,
+    name:'ProtoLink', sub:'Physician Referral Network',
+    delivery:'Standalone web application',
+    short:'Physician referral software connecting clinical sites with referring physicians who identify and send potential trial participants. Manages the referral relationship, tracks patient referral status, and measures referral program ROI.',
+    what:'Physician referrals are among the most cost-effective sources of clinical trial participants. Referring physicians identify patients in their practice who match trial criteria and send them to the research site. ProtoLink manages this relationship end-to-end: maintaining a database of referring physicians organized by specialty and geography, tracking each referred patient through the full enrollment pipeline, and automatically communicating status updates back to the referring physician so they are kept informed about their patient. Strong referral networks dramatically reduce cost-per-enrolled participant compared to paid advertising.',
+    now:'Developed and live.',
+    build:'CRM enhancements for physician profile management with specialty, patient population characteristics, geographic coverage, and historical referral performance metrics. Referral tracking dashboard with patient-level visibility by pipeline stage: referred, screened, enrolled, completed, dropped. Automated communication to referring physicians: acknowledgment of referral receipt, screening appointment confirmation, enrollment notification, and study completion notification. ROI reporting: cost per referral, conversion rate by physician, enrolled patients per physician per quarter. Integration with CTMS enrollment records for real-time status updates triggering physician notifications.',
+    tech:'Contact management database for physician profiles with specialty taxonomies. Referral workflow state machine tracking patient progress through stages. Email automation engine for physician communications at each workflow stage. Integration with CTMS for enrollment status updates to trigger automated physician notifications without coordinator intervention.',
+    comp:'No major dedicated physician referral platform exists specifically for clinical research. Sites manage referral networks through spreadsheets, informal relationships, and basic CRM tools. As an integrated component of DAX, ProtoLink becomes part of a complete participant recruitment ecosystem alongside Calendex and Database Activation AI, creating a recruitment flywheel.',
+    tags:['physician referral','patient recruitment','CRM','referral tracking','network','ProtoLink','specialty']
+  },
+  {
+    id:'calendex', cat:'ops', status:'live', cx:4,
+    name:'Calendex', sub:'AI Patient Recruitment Calling Platform',
+    delivery:'Standalone platform + AI conversation agent',
+    short:'AI-powered outbound and inbound calling system for clinical research patient recruitment. Screens prospective participants for eligibility using natural language conversation, schedules appointments, and manages follow-up calls at scale.',
+    what:'Calendex is an AI calling platform purpose-built for clinical trial participant recruitment. It automatically calls individuals from recruitment lists, conducts structured eligibility screening conversations in natural language, and books appointments for qualified candidates directly into the site scheduling system. Disqualified candidates are documented with reasons. Follow-up calls for non-answers are automated. Coordinators only handle warm, pre-screened, appointment-confirmed leads. The economics are straightforward: Calendex makes 500 calls in the time a human coordinator makes 50, and does so consistently around the clock.',
+    now:'Live and operational. Krisp AI accent conversion pilot is running with four Minerva call center employees to improve intelligibility for US patient populations. Broader Krisp rollout decision pending pilot results. Ongoing feature development and optimization.',
+    build:'Enhanced screening logic with deeper protocol-specific question trees configurable per study. Direct integration with the CTMS calendar for auto-scheduling of qualified participants into coordinator appointment slots. Real-time call monitoring dashboard for supervisors to listen in and coach. Call recording with automatic transcript generation and sentiment analysis. Multi-language calling capability (Spanish is the first priority for US markets). TCPA compliance module: time-of-day restrictions, do-not-call list management, required disclosures. Performance analytics: call volume, answer rate, screening completion rate, qualification rate, appointment scheduled rate, no-show rate.',
+    tech:'LLM-powered conversation engine with protocol-specific screening scripts loaded per study. Telephony infrastructure via Twilio or Vonage. Real-time speech-to-text for live transcript generation. Krisp AI SDK for noise cancellation and accent conversion. CRM integration for recruitment list management and outcome logging. TCPA compliance rules engine with jurisdiction-specific rules.',
+    comp:'Verata Health (formerly Throte), Delpha, and similar AI recruitment callers are standalone point products valued at $3-5 million each based on doing only this function. Calendex integrated into the full DAX recruitment ecosystem creates a participant recruitment flywheel: Database Activation AI identifies candidates, Calendex calls them, ProtoLink handles physician referrals, and Engage retains enrolled participants. No competitor can match this end-to-end recruitment infrastructure.',
+    tags:['AI calling','patient recruitment','Calendex','telephony','screening','Krisp','TCPA','NLP','conversation AI']
+  },
+  {
+    id:'feasibility-ai', cat:'ai', status:'enhancing', cx:3,
+    name:'Feasibility Questionnaire Assistant', sub:'Sponsor Questionnaire Automation',
+    delivery:'AI agent within Syncora',
+    short:'AI tool that helps sites rapidly complete and optimize sponsor feasibility questionnaires by auto-filling responses from the site\'s profile data and flagging questions where the site may not meet requirements.',
+    what:'Before awarding a study to a site, sponsors send feasibility questionnaires asking about the site\'s patient population, available equipment, staff experience, and specific capabilities required by the protocol. Completing these manually requires pulling information from multiple systems and takes hours per questionnaire. The Feasibility Questionnaire Assistant reads the questionnaire, matches each question against the site\'s structured profile database (patient demographics and condition distribution, historical study experience by therapeutic area and phase, equipment inventory, staff certifications), and generates a complete draft response that coordinators review and submit.',
+    now:'Exists and functional. Needs significant enhancement in data coverage depth, matching accuracy, and output quality.',
+    build:'Comprehensive site capability database with patient population demographics and condition data (ICD-10 coded). Historical study experience database categorized by therapeutic area, indication, phase, and sponsor. Equipment and device inventory with certifications. Auto-population engine matching questionnaire question intent to the appropriate site data. Confidence scoring per answer so reviewers know which answers need verification. Gap analysis report identifying questions where the site may not qualify, with suggested response language for each. Draft, review, and submit workflow integrated with Syncora.',
+    tech:'LLM for question interpretation and answer drafting from structured site data (RAG architecture where the site profile database is the retrieval corpus). Protocol PDF ingestion for understanding the specific study context behind the questionnaire. PDF and Word document ingestion for the questionnaire itself. Output formatted matching the questionnaire structure.',
+    comp:'Versa Trial built only this feature and was valued at several million dollars, validating clear market demand. DAX\'s version needs to be substantially better: deeper data integration, multi-site capability comparison, competitive positioning guidance (the site\'s strengths relative to competitor sites in the area), and integrated into the full PCTMS workflow rather than existing as a standalone point tool.',
+    tags:['feasibility','AI','questionnaire','study startup','auto-fill','site profile','RAG','sponsor']
+  },
+  {
+    id:'mktg-ai', cat:'ai', status:'planned', cx:3,
+    name:'Marketing Material Prep AI', sub:'Automated Recruitment Content Generation',
+    delivery:'AI agent within CTMS',
+    short:'Upon protocol activation, automatically generates a complete recruitment marketing package including flyers, social media ads, radio scripts, and digital ads, with protocol-specific language and IRB-required disclaimers throughout.',
+    what:'Every new clinical trial requires a suite of recruitment marketing materials tailored to the specific study: flyers for waiting rooms and community boards, social media ads for Facebook and Instagram targeting the relevant demographic, radio scripts for local stations, and digital banner ads for condition-specific websites. Creating these manually requires marketing expertise and takes days per study. The Marketing Material Prep AI reads the activated protocol, extracts key recruitment details (target condition, age range, eligibility criteria, visit schedule, compensation), applies required IRB disclaimer language, and generates a complete, customized, IRB-ready marketing package.',
+    now:'Does not exist. Sites either hire marketing agencies at significant cost per study or task internal staff with creating materials from scratch for every new trial activation.',
+    build:'Protocol PDF ingestion and structured information extraction (condition, inclusion/exclusion criteria in plain language, visit requirements, compensation, study duration). Demographic targeting logic mapping extracted data to ad audience specifications. IRB disclaimer library maintained per major IRB (WCG, Advarra, and common local IRBs) and updated per FDA guidance changes. Template system for each material type: recruitment flyer, Facebook and Instagram ad copy, radio 30-second and 60-second scripts, digital banner ad copy. Human review and edit interface. IRB submission package generator formatting all materials per IRB submission requirements. Export in appropriate formats: PDF for print flyers, PNG and JPEG for digital ads, DOCX for editable copies.',
+    tech:'LLM for content generation with clinical research regulatory constraints and required disclaimers automatically applied. Protocol PDF parser for structured information extraction. Canva API for designed flyer output or custom HTML/CSS-to-PDF design engine. IRB requirement database with per-IRB formatting rules.',
+    comp:'No automated marketing material generation tool exists specifically for clinical research. Sites spend $500 to $5,000 per study on marketing material creation, depending on the recruitment media mix. For a site running 20 concurrent studies, this tool represents $10,000 to $100,000 in annual savings and cuts weeks from the study startup timeline.',
+    tags:['marketing','AI','recruitment materials','protocol activation','IRB','flyers','social media','content generation']
+  },
+  {
+    id:'esource-builder', cat:'ai', status:'planned', cx:5,
+    name:'eSource Builder', sub:'AI-Assisted Protocol Form Generator',
+    delivery:'Open platform + AI agent (white-label capable)',
+    short:'AI tool that reads a protocol and generates complete eSource templates: visit schedule, forms per visit, and all data fields with types and validation. Open platform so any site or vendor, including CRIO and RealTime users, can build templates here and export to their own systems.',
+    what:'Building eSource data capture forms for a new protocol is one of the most time-consuming tasks in study startup. A complex protocol can require 40 to 60 uniquely configured forms across 15 to 20 distinct visit types. The eSource Builder reads the full protocol document and automatically constructs a complete eSource template: the visit schedule, forms for each visit type, specific data fields with correct types, acceptable value ranges, and branching logic. The human editor reviews and refines the AI-generated template before activation. The strategic positioning: build this as an open platform. Any clinical site, CRO, or eSource vendor can use DAX as their template authoring environment and export the finished template to their own native system. DAX becomes the standard authoring environment for the eSource ecosystem.',
+    now:'Does not exist. One of the most technically challenging and strategically significant products on the entire roadmap. The open-platform model is what elevates this from a feature to a potential platform-level product.',
+    build:'Protocol PDF parser with clinical data extraction: visit schedule with timing windows, procedure lists per visit, data endpoints, laboratory tests, safety assessments. Drag-and-drop form builder with a comprehensive clinical field type library: numeric with acceptable range, coded value from pick list, date and time, free text, boolean, composite score, physical assessment. Visit schedule builder with screening, treatment, follow-up, early termination, and end-of-study visit structures. Conditional branching logic engine: if a value is outside an acceptable range, display an alert and require explanation; if a procedure was performed, display follow-up documentation fields. Data validation rule builder. Preview and simulation mode allowing entry of test data to verify form behavior. Export formats: native DAX eSource format, PDF specification document, HL7 FHIR Questionnaire resource, generic CSV field template. White-label access enabling external companies to build and export templates to their own systems.',
+    tech:'LLM for protocol document interpretation and form suggestion. The core technical challenge is reliable structured data extraction from highly variable, semi-structured protocol documents ranging from 50 to 500 pages. The branching logic engine requires a formal rule language and visual editor. The export layer requires maintaining up-to-date knowledge of destination format specifications. 21 CFR Part 11 consideration: the authoring process itself needs a full audit trail showing who created and modified each form element and when.',
+    comp:'CRIO has a proprietary form builder used internally. RealTime has one as well. Both are closed, manual, and build only for their own system. An AI-assisted, open-platform builder that outputs to any system would attract clinical sites, CROs, and potentially competing eSource vendors as customers. This is the product with the highest potential for platform ecosystem dynamics and network effects: the more templates are built on DAX, the more valuable the template library becomes.',
+    tags:['eSource builder','AI','protocol parsing','form builder','open platform','CRIO','RealTime','FHIR','template','white-label']
+  },
+  {
+    id:'reg-prep-ai', cat:'ai', status:'planned', cx:4,
+    name:'Regulatory Document Prep AI', sub:'Study Startup Regulatory Automation',
+    delivery:'AI agent within CTMS',
+    short:'Automates preparation of regulatory documents required for study startup. Reads the protocol and generates a complete, protocol-specific regulatory checklist, then pre-fills document templates from the site\'s existing data to dramatically accelerate study activation.',
+    what:'Study startup regulatory preparation is a multi-week process for any clinical site. It involves identifying every required document according to ICH E6(R2) GCP guidelines, gathering information from multiple sources including the protocol, site SOPs, and staff records, filling out complex forms, routing documents for appropriate signatures, and organizing everything for IRB and sponsor submission. For a site managing several simultaneous study startups, this is the primary bottleneck to activation timelines. The Regulatory Document Prep AI reads the protocol, generates a complete checklist of required documents, auto-fills templates using the site\'s existing data (PI CV, coordinator credentials, lab certifications, IRB information, and prior disclosures), and tracks completion status with due date alerts.',
+    now:'Does not exist. Project managers spend an estimated 2 to 3 days per study on regulatory preparation, a process highly dependent on individual expertise and prone to incomplete checklists.',
+    build:'Regulatory checklist generator from protocol input using ICH E6(R2) as the baseline standard with study-type modifications (oncology, neurology, and other therapeutic areas have additional requirements). Document templates for key items: FDA Form 1572, delegation log, financial disclosure, lab certification review summary, protocol signature page. Auto-fill engine drawing from the site profile database: PI and sub-investigator CVs and licensure, coordinator credentials, laboratory certification and accreditation, IRB registration number. Document status tracker with owner assignments and due date management. Escalation alerts to site director for overdue items. Submission-ready package generator organizing all documents for IRB and sponsor review. Integration with eISF for direct document storage on completion.',
+    tech:'LLM for protocol interpretation and regulatory requirement extraction. Template engine with configurable merge fields. FDA form library maintained with current versions. Site profile database as the auto-fill data source. Integration with eISF for document handoff and storage.',
+    comp:'No AI tool automates regulatory startup preparation. This is pure operational advantage with a quantifiable impact: study startup timelines that currently take 3 weeks are reduced to under 1 week. Study activation speed is one of the primary metrics sponsors use to rank and select sites for future studies. Faster activation means more studies awarded.',
+    tags:['regulatory','AI','study startup','FDA 1572','documents','project management','checklist','ICH E6R2','automation']
+  },
+  {
+    id:'reg-mgmt-ai', cat:'ai', status:'planned', cx:3,
+    name:'Regulatory Management AI', sub:'Ongoing Compliance Intelligence',
+    delivery:'AI agent within CTMS',
+    short:'Ongoing regulatory compliance management after study activation. Tracks document expirations, IRB renewal cycles, protocol amendment impacts, and produces a compliance health score showing exactly where risks exist across the portfolio.',
+    what:'Regulatory compliance in a clinical trial is not a one-time activity at startup. IRB approvals must be renewed annually or the study must stop. Staff CVs on the delegation log expire every two years. Laboratory accreditation certificates expire annually. Protocol amendments may require re-training all study staff, initiating re-consent for enrolled participants, and updating multiple regulatory documents. The Regulatory Management AI continuously monitors all of these requirements across every active study, generates actionable alerts before deadlines, manages amendment workflows, and produces a compliance health score that shows the site director exactly where risks exist at any given moment.',
+    now:'Does not exist. Compliance deadline tracking is manual and depends entirely on individual coordinators and project managers remembering expiration dates. Missed IRB renewals during FDA inspections are a major source of warning letters.',
+    build:'Expiration tracking engine for all regulatory document categories with document-type-specific alert thresholds. IRB continuing review calendar with 90, 60, and 30 day advance alerts and automatic task creation. Protocol amendment workflow: study-specific impact assessment, required re-training assignment, participant re-consent identification, regulatory document update task list. Compliance health score per study shown on a 0-100 scale with breakdown by category. Coordinator task assignment and escalation logic for compliance action items. Sponsor-ready compliance summary report formatted for monitoring visit presentation.',
+    tech:'Scheduled compliance check jobs running daily. Integration with eISF for document metadata and expiration date reading. LLM for interpreting protocol amendment text and determining site-level compliance impact. Configurable compliance rule library by study phase and regulatory jurisdiction.',
+    comp:'Manual compliance management is universal across clinical sites. The regulatory and financial cost of a missed IRB renewal or expired CV discovered during an FDA inspection is substantial: warning letters, study suspension, and sponsor trust damage. An AI that proactively eliminates this risk class has an immediate, quantifiable value proposition for any research site.',
+    tags:['regulatory','AI','compliance','IRB renewal','amendments','expiration tracking','compliance health','risk management']
+  },
+  {
+    id:'budget-ai', cat:'ai', status:'planned', cx:4,
+    name:'Budget Negotiator AI', sub:'Clinical Trial Budget Analysis and Counter-Proposal',
+    delivery:'AI agent within CTMS',
+    short:'Analyzes sponsor budget proposals against the site\'s historical cost data and published fair market value benchmarks, identifies undervalued line items, and generates a professional, data-backed counter-proposal with justification language.',
+    what:'Clinical trial budget negotiation requires specialized knowledge that most site staff do not have. Sites must evaluate whether a sponsor\'s proposed budget covers the true cost of every procedure in the protocol: staff time, supplies, equipment use, overhead allocation, and regulatory burden. Without data to support their position, many sites accept underpaid budgets rather than risk losing the study opportunity. The Budget Negotiator AI changes the information asymmetry: it compares the sponsor\'s budget line by line against the site\'s own historical cost data and publicly available fair market value benchmarks, flags every undervalued item with the proposed versus recommended amount, and generates a professional counter-proposal with supporting justification language ready to be sent to the sponsor.',
+    now:'Does not exist. Budget negotiation is done manually by BD and finance staff with limited data. Most sites lack a systematic view of their own historical costs and leave revenue on the table in nearly every budget negotiation.',
+    build:'Sponsor budget ingestion supporting both Excel and PDF formats. Site historical cost database organized by procedure type and CPT code, populated from actual invoicing data over time. Fair market value benchmark database drawing from published CenterWatch rates and internal historical data. Line-item gap analysis report comparing sponsor-proposed amounts to site historical costs and FMV benchmarks. Counter-proposal document generator with negotiation language and supporting justification for each increased line item. Budget approval workflow for internal review before submission. Study budget tracking module following negotiated budget versus actual accrued costs through the study lifecycle.',
+    tech:'LLM for budget document parsing across variable formats and for negotiation language generation. CPT code database with clinical research procedure mapping. Excel import and export. PDF counter-proposal generation with site letterhead. Integration with the Invoicing System for budget-to-actuals comparison.',
+    comp:'No AI budget negotiation tool exists for clinical research. Budget analysts at large site networks do this work manually with spreadsheets and experiential knowledge accumulated over years. An AI that performs the analysis in minutes with broader historical data than any individual analyst possesses would immediately become essential for any serious site network\'s business development operation.',
+    tags:['budget','AI','negotiation','fair market value','CPT codes','revenue protection','finance','counter-proposal']
+  },
+  {
+    id:'invoicing-ai', cat:'ai', status:'planned', cx:3,
+    name:'Invoicing System', sub:'Automated Clinical Trial Revenue Capture',
+    delivery:'Module within CTMS + AI gap detection',
+    short:'Automated invoicing tied directly to CTMS visit completion and milestone triggers. Eliminates the 2%+ revenue loss from manual billing errors by capturing every billable event and generating accurate, documentation-backed invoices automatically.',
+    what:'Clinical sites lose meaningful revenue to billing errors, missed invoicing, and accounts receivable delays. Visits are completed and never billed. Procedures are performed and not captured in the billing record. Invoices are submitted with incorrect amounts or missing supporting documentation. The Invoicing System connects directly to the CTMS: every visit completed and procedure documented automatically generates a billable entry in the billing queue. AI cross-references completed visit records against the contracted budget to flag any events that should have been invoiced but were not, ensuring complete revenue capture before each billing cycle.',
+    now:'Does not exist as a system. Manual billing via spreadsheets or generic accounting tools is the universal approach. Industry estimates suggest sites lose 2 to 5 percent of study revenue annually to billing errors and missed invoices.',
+    build:'Billable event engine triggered by CTMS visit completion confirmation and procedure documentation. Budget cross-reference matching completed procedures to approved contract line items and amounts. AI gap detection running weekly to flag visits completed but not yet invoiced, with coordinator notification. Invoice generation with full line-item detail and attached eSource visit records as supporting documentation. Approval workflow before invoice transmission to sponsor. Sponsor payment portal for invoice visibility and communication about payment status. Aging report for accounts receivable management. Integration with QuickBooks or Xero for accounting system handoff.',
+    tech:'Event-driven architecture where CTMS visit completion triggers billable event creation. Budget database with approved contract amounts per study and visit type. PDF invoice generation with site letterhead. Sponsor read-only portal with secure access link. API handoff to QuickBooks Online or Xero for accounting team records.',
+    comp:'Sites currently use QuickBooks manually with no clinical-trial-specific billing logic and no automatic connection to the CTMS. Revenue cycle management for clinical trials is a completely underserved category. Automated invoicing tied directly to the CTMS recovers the 2 to 5 percent revenue lost annually and dramatically reduces accounts receivable aging, creating a quantifiable return on investment that sells the platform.',
+    tags:['invoicing','billing','AI','revenue cycle','automation','sponsor payments','QuickBooks','accounts receivable']
+  },
+  {
+    id:'protocol-trainer', cat:'ai', status:'planned', cx:3,
+    name:'Protocol Trainer AI', sub:'AI-Powered Protocol Education',
+    delivery:'AI agent within Employee Portal and CTMS',
+    short:'AI tutor that teaches site staff about specific clinical trial protocols using natural language Q&A and auto-generated quizzes. Generates training certificates that integrate directly with the delegation log.',
+    what:'Every staff member involved in a clinical trial must be trained on the specific protocol before any participant contact, and training must be documented on the delegation log for FDA inspection. Traditional protocol training involves a coordinator reading the protocol aloud to the team in a group session lasting two to four hours. This approach is time-consuming, difficult to scale when staff changes occur mid-study, and produces no evidence of individual comprehension. The Protocol Trainer AI creates a personalized protocol tutor: each staff member can ask any question about the protocol in plain English, receive accurate answers drawn from the actual protocol text, take auto-generated comprehension quizzes, and receive a signed training certificate that goes directly into their training record.',
+    now:'Does not exist. Protocol training is done through live group sessions with no individual comprehension verification and no automated certification.',
+    build:'Protocol PDF ingestion with full text, table, and figure parsing. RAG-based conversational Q&A where the protocol document is the knowledge base for each session. Auto-generated quiz bank from protocol content covering: inclusion and exclusion criteria, visit schedules and timing windows, required procedures by visit, concomitant medication restrictions, adverse event reporting thresholds, and study stopping criteria. Staff proficiency tracking per question category with identification of knowledge gaps. Training certificate generation in PDF with protocol title, version, staff name, date, and quiz score. Integration with HRMS training records and CTMS delegation log for automatic training documentation. Mobile-accessible interface for site staff to train during quiet moments between patient visits.',
+    tech:'RAG architecture with the protocol PDF as the per-study retrieval corpus. LLM for answer generation staying strictly within the source document. Question randomization for quiz retakes. Per-staff training session storage with full interaction history. Certificate generation with digital timestamp.',
+    comp:'No protocol-specific AI trainer exists. Sites spend 2 to 4 hours per new staff member on manual protocol training for every study assignment. AI trainer scales protocol education infinitely, maintains perfect consistency, and provides documented proof of individual comprehension for FDA inspections. For a site running 20 studies with 5 staff per study, the time savings are significant and immediate.',
+    tags:['training','AI','protocol','education','RAG','delegation log','certification','staff training','Q&A']
+  },
+  {
+    id:'db-activation', cat:'ai', status:'planned', cx:5,
+    name:'Database Activation AI', sub:'Patient Matching and Recruitment Trigger',
+    delivery:'AI agent within CTMS',
+    short:'When a new protocol arrives, automatically scans the site\'s patient database to identify individuals matching inclusion and exclusion criteria, scores them by fit confidence, and feeds a prioritized outreach list directly to Calendex for automated recruitment calls.',
+    what:'The fastest and most cost-effective recruitment source for any clinical site is their existing patient population. Patients who have already interacted with the practice are known quantities: their medical history is documented, they are geographically local, and trust has already been established. The Database Activation AI reads the new protocol\'s inclusion and exclusion criteria and runs them against the full patient database, scoring every individual on match confidence. The resulting prioritized outreach list is fed directly to Calendex, which begins automated screening calls within minutes of the site deciding to recruit. Manual chart review that would take coordinators days or weeks takes minutes.',
+    now:'Does not exist. Sites conduct manual chart reviews when activating new studies. This process is inconsistent, incomplete, and the primary limiting factor on how quickly sites can begin recruiting after activation.',
+    build:'Patient database with structured clinical fields: diagnosis codes (ICD-10), current and historical medications (RxNorm), demographics, prior clinical trial participation history, and documented research consent status. Protocol inclusion and exclusion criteria parser using LLM to convert natural language protocol criteria into executable matching queries. Matching algorithm with multi-dimensional confidence scoring (strong match, possible match, needs verification). HIPAA-compliant re-contact eligibility verification with documented consent basis for each patient. Prioritized outreach list generation with match rationale per patient. Direct integration with Calendex calling queue for automated outreach initiation. Coordinator review interface allowing manual list review and editing before calls begin.',
+    tech:'Clinical data model with ICD-10, SNOMED CT, and RxNorm coding for standardized matching. LLM for inclusion and exclusion criteria interpretation: converting natural language protocol text into structured, queryable matching rules. Matching algorithm combining rule-based criteria filtering with ML-based confidence scoring. HIPAA-compliant re-contact workflow with documented patient consent basis. Direct API integration with Calendex for seamless calling queue population.',
+    comp:'TrialSpark, THREAD, and TrialMatchAI perform patient matching services externally, accessing site data and charging referral fees. Sites conducting internal database activation retain full patient data privacy, pay no external referral fees, and activate recruitment faster than any externally managed matching service can respond. Integrated with Calendex, this creates a complete, internally controlled recruitment pipeline from database query to outreach call with no external dependency.',
+    tags:['patient matching','AI','database activation','recruitment','inclusion criteria','ICD-10','Calendex integration','HIPAA']
+  },
+  {
+    id:'data-transfer', cat:'ai', status:'planned', cx:5,
+    name:'Data Transfer Agent', sub:'eSource to EDC and Lab Integration Middleware',
+    delivery:'Middleware platform + AI validation agent',
+    short:'Automates clinical data movement between systems: lab results into eSource, and eSource data into sponsor EDC platforms (Medidata Rave, Veeva Vault, REDCap, Castor). Eliminates manual transcription, the largest single source of clinical data errors.',
+    what:'Manual transcription is the primary source of data errors in clinical trials. Coordinators read lab values from paper printouts and type them into source documents. They read source data and type it into sponsor EDC systems, often with significant time delays. Each transcription step introduces errors that generate sponsor queries, delay study data lock, and consume coordinator time in error correction. The Data Transfer Agent automates both data flows: laboratory results travel from the lab system directly into the patient\'s eSource record, and reviewed eSource data flows directly into the sponsor\'s EDC system. Coordinators remain responsible for review and confirmation at defined checkpoints, but mechanical data movement is fully automated.',
+    now:'Does not exist. Manual transcription at every data transfer point is universal at clinical sites. This is the single largest operational inefficiency in clinical data management and the primary driver of sponsor queries.',
+    build:'Lab-to-eSource pipeline: HL7 v2.x message listener for commercial labs, FHIR R4 REST API client for modern lab systems, result normalization and LOINC code mapping, auto-population of eSource lab fields, critical value alerting to investigator of record, data receipt and acceptance audit trail. eSource-to-EDC pipeline: Medidata Rave API connector, Veeva Vault EDC API connector, REDCap REST API connector, Castor EDC connector. No-code field mapping configuration interface allowing non-developers to map eSource fields to EDC fields per study. Transfer job scheduler with configurable frequency. Error handling with automatic retry and coordinator notification on repeated failure. Discrepancy detection flagging when any auto-transferred value differs from previously manually entered data.',
+    tech:'HL7 interface engine. FHIR R4 REST API. EDC vendor APIs: Medidata Rave API requires certified integration partner status; Veeva Vault has a platform API with documentation; REDCap has an open REST API; Castor has documented API access. Field mapping configuration stored per study. Event-driven transfer triggers for time-sensitive data like critical lab values.',
+    comp:'Medidata, Castor, and Veeva have connectors between their own tools only. No independent data transfer middleware exists handling both lab-to-eSource and eSource-to-EDC flows across multiple EDC platforms at accessible pricing. This product addresses the single largest inefficiency in clinical research site operations and has potential as a standalone integration platform for the market beyond internal use.',
+    tags:['data transfer','EDC','HL7','FHIR','Medidata','REDCap','Veeva','transcription elimination','middleware','lab integration']
+  },
+  {
+    id:'qa-ai', cat:'ai', status:'planned', cx:4,
+    name:'Quality Assurance AI', sub:'Proactive Data Quality Intelligence',
+    delivery:'AI agent within CTMS',
+    short:'Continuously monitors trial data across eSource and EDC for inconsistencies, protocol deviations, missing data, and query patterns. Identifies issues proactively before sponsors, monitors, or FDA auditors discover them.',
+    what:'Clinical trial data quality determines whether study results are accepted by regulators and whether the site maintains sponsor trust for future work. Sites that proactively identify and correct their own data quality issues before the sponsor\'s monitor or a regulatory inspector does are dramatically more competitive in the study award process. The QA AI acts as a continuous internal auditor: scanning all data across every active study daily, detecting inconsistencies against protocol requirements, identifying patterns of recurring errors before they compound, and generating pre-monitoring-visit preparation reports that show coordinators exactly what the sponsor monitor is likely to ask about during their next site visit.',
+    now:'Does not exist. Quality assurance is reactive at most sites: issues are identified when the sponsor monitor visits or when sponsor queries are received. By the time issues are identified externally, significant additional errors may have accumulated.',
+    build:'Data quality rules engine connected to eSource and EDC data with protocol-specific rule configurations loaded per study. Protocol deviation detection: visit outside allowed timing window, out-of-range laboratory value without documented deviation, required procedure not performed, required documentation missing. Missing data heatmap visualizing completeness by patient, visit, and form. Query trend analysis to identify recurring data entry error types suggesting systematic training gaps. Pre-monitoring-visit preparation report listing the most likely monitor findings based on current data quality analysis. Audit-readiness score per study on a 0-100 scale with categorical breakdown. Root cause analysis workflow for significant data quality findings. Integration with CTMS deviation management module for direct action item creation.',
+    tech:'Rule-based QA engine with protocol-specific configurations loaded from the protocol and study setup. LLM for anomaly pattern recognition and finding explanation in plain language. Statistical process control methods for detecting unusual trends across multiple data points. Scheduled daily quality scan jobs with coordinator notification of new findings. Integration with eSource and EDC via the Data Transfer Agent data layer.',
+    comp:'Medidata Signal and Oracle Health Sciences provide sponsor-side analytics for data quality monitoring. Nothing site-specific and affordable exists. Sites that surface and correct their own data quality issues proactively have significantly lower query rates, faster database lock timelines, and substantially better sponsor relationships. These advantages directly translate into more future study awards.',
+    tags:['quality assurance','AI','data quality','protocol deviations','queries','monitoring visit prep','audit readiness','compliance']
+  }
+];
+
+let activeCat = 'all';
+let activeStatus = 'all';
+
+function setCat(cat, btn) {
+  activeCat = cat;
+  document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function setStatus(status) {
+  activeStatus = activeStatus === status ? 'all' : status;
+  renderStats();
+  render();
+}
+
+function doFilter() { render(); }
+
+function filtered() {
+  const q = document.getElementById('srch').value.toLowerCase();
+  return ITEMS.filter(item => {
+    const catOk = activeCat === 'all' || item.cat === activeCat;
+    const txt = (item.name + ' ' + item.short + ' ' + item.tags.join(' ')).toLowerCase();
+    const qOk = !q || txt.includes(q);
+    let statusOk = true;
+    if (activeStatus === 'live') statusOk = item.status === 'live';
+    else if (activeStatus === 'building') statusOk = item.status === 'building' || item.status === 'enhancing';
+    else if (activeStatus === 'planned') statusOk = item.status === 'planned';
+    return catOk && qOk && statusOk;
+  });
+}
+
+function renderStats() {
+  const t = ITEMS.length;
+  const live = ITEMS.filter(i => i.status==='live').length;
+  const bld = ITEMS.filter(i => i.status==='building'||i.status==='enhancing').length;
+  const pln = ITEMS.filter(i => i.status==='planned').length;
+  const aS = activeStatus;
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="scard scard-btn ${aS==='all'?'scard-active':''}" onclick="setStatus('all')" title="Show all">
+      <div class="snum" style="color:#e8eef5">${t}</div><div class="slabel">Total Products</div>
+      <div class="scard-indicator" style="background:#e8eef5"></div>
+    </div>
+    <div class="scard scard-btn ${aS==='live'?'scard-active':''}" onclick="setStatus('live')" title="Filter: Live Today">
+      <div class="snum" style="color:#34d399">${live}</div><div class="slabel">Live Today</div>
+      <div class="scard-indicator" style="background:#34d399"></div>
+    </div>
+    <div class="scard scard-btn ${aS==='building'?'scard-active':''}" onclick="setStatus('building')" title="Filter: In Development">
+      <div class="snum" style="color:#3b9eff">${bld}</div><div class="slabel">In Development</div>
+      <div class="scard-indicator" style="background:#3b9eff"></div>
+    </div>
+    <div class="scard scard-btn ${aS==='planned'?'scard-active':''}" onclick="setStatus('planned')" title="Filter: On Roadmap">
+      <div class="snum" style="color:#7a8fa6">${pln}</div><div class="slabel">On Roadmap</div>
+      <div class="scard-indicator" style="background:#7a8fa6"></div>
+    </div>
+    <div class="scard">
+      <div class="snum" style="color:#f97316">4</div><div class="slabel">Platform Pillars</div>
+    </div>
+  `;
+}
+
+function render() {
+  const items = filtered();
+  const nr = document.getElementById('no-res');
+  const c = document.getElementById('content');
+  if (items.length === 0) { nr.style.display='block'; c.innerHTML=''; return; }
+  nr.style.display = 'none';
+  const order = ['pctms','ctms','ops','ai'];
+  let html = '';
+  order.forEach(cat => {
+    const ci = items.filter(i => i.cat===cat);
+    if (!ci.length) return;
+    const info = CATS[cat];
+    html += `<div class="sec-head">
+      <div class="sec-pip" style="background:${info.color}"></div>
+      <div class="sec-label" style="color:${info.color}">${info.label}</div>
+      <div class="sec-cnt">${ci.length}</div>
+    </div><div class="grid">`;
+    ci.forEach(item => {
+      const tags = item.tags.slice(0,3).map(t=>`<span class="ctag">${t}</span>`).join('');
+      html += `<div class="card" style="--cc:${info.color}" onclick="openDetail('${item.id}')">
+        <div class="card-top">
+          <div class="cat-label">${info.short}</div>
+          <span class="badge b-${item.status}">${SL[item.status]}</span>
+        </div>
+        <div class="card-name">${item.name}</div>
+        <div class="card-sub">${item.sub}</div>
+        <div class="card-desc">${item.short}</div>
+        <div class="card-foot">
+          <div class="card-tags">${tags}</div>
+          <div class="card-arrow">&#8599;</div>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  c.innerHTML = html;
+}
+
+function openDetail(id) {
+  const item = ITEMS.find(i=>i.id===id);
+  if (!item) return;
+  const cat = CATS[item.cat];
+  const col = cat.color;
+
+  document.getElementById('det-crumb').innerHTML = `<span style="color:${col}">${cat.label}</span> &rsaquo; <strong>${item.name}</strong>`;
+
+  const cxPips = Array(5).fill(0).map((_,i)=>`<div class="cx-pip" style="${i<item.cx?`background:${col}`:'background:var(--border)'}"></div>`).join('');
+  const tags = item.tags.map(t=>`<span class="dtag">${t}</span>`).join('');
+
+  document.getElementById('det-body').innerHTML = `
+    <div class="det-meta">
+      <div class="det-cat" style="color:${col}">${cat.label}</div>
+      <span class="badge b-${item.status}">${SL[item.status]}</span>
+    </div>
+    <div class="det-title">${item.name}</div>
+    <div class="det-subtitle">${item.sub}</div>
+    <div class="det-chips">
+      <div class="chip"><div class="chip-dot" style="background:${col}"></div>${item.delivery}</div>
+      <div class="chip">
+        <div class="cx-bar">${cxPips}</div>
+        <span class="cx-label">Build complexity: ${CX_LABELS[item.cx]}</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">What it is</div>
+      <div class="sec-body"><p>${item.what}</p></div>
+    </div>
+    <div class="section">
+      <div class="sec-title">Current state</div>
+      <div class="sec-body"><p>${item.now}</p></div>
+    </div>
+    <div class="section">
+      <div class="sec-title">What needs to be built</div>
+      <div class="sec-body"><p>${item.build}</p></div>
+    </div>
+    <div class="section">
+      <div class="sec-title">Technical considerations</div>
+      <div class="sec-body"><p>${item.tech}</p></div>
+    </div>
+    <div class="section">
+      <div class="sec-title">Competitive landscape</div>
+      <div class="sec-body"><p>${item.comp}</p></div>
+    </div>
+    <div class="det-tags">${tags}</div>
+  `;
+
+  const layer = document.getElementById('det-layer');
+  layer.classList.add('open');
+  layer.scrollTop = 0;
+}
+
+function closeDetail() {
+  document.getElementById('det-layer').classList.remove('open');
+}
+
+document.addEventListener('keydown', e => { if (e.key==='Escape') closeDetail(); });
+
+renderStats();
+render();
+</script>
+</body>
+</html>
