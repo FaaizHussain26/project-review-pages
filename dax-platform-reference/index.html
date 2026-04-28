@@ -85,11 +85,12 @@ body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: var(
 .sec-cnt { font-size: 11px; color: var(--dim); border: 1px solid var(--border); border-radius: 8px; padding: 2px 8px; margin-left: 4px; }
 .sec-sub { font-size: 12px; color: var(--dim); margin-left: auto; font-style: italic; }
 
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; align-items: stretch; }
 
 .card {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--rl);
-  padding: 20px 20px 50px; cursor: pointer; position: relative;
+  padding: 20px; cursor: pointer; position: relative;
+  display: flex; flex-direction: column; min-height: 100%;
   overflow: hidden; transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s ease, border-color 0.18s ease, background 0.18s ease;
 }
 /* Top accent bar */
@@ -113,7 +114,7 @@ body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: var(
 .card:hover::before { opacity: 1; }
 .card:hover::after { opacity: 1; }
 
-.card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .cat-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--cc); }
 
 /* Status badges - redesigned */
@@ -135,10 +136,10 @@ body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: var(
 .card:hover .card-name { color: #fff; }
 .card-sub { font-size: 11px; color: var(--dim); margin-bottom: 10px; }
 .card-desc { font-size: 12px; color: var(--muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.card-foot { position: absolute; bottom: 14px; left: 20px; right: 20px; display: flex; align-items: center; justify-content: space-between; }
+.card-foot { margin-top: auto; padding-top: 16px; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
 
 /* Tags - redesigned with pillar-aware color */
-.card-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.card-tags { display: flex; gap: 5px; flex-wrap: wrap; flex: 1; }
 .ctag {
   font-size: 10px; font-weight: 600; padding: 3px 8px;
   background: color-mix(in srgb, var(--cc) 8%, transparent);
