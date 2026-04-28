@@ -669,8 +669,8 @@ function renderStats() {
   const aS = activeStatus;
   document.getElementById('stats-grid').innerHTML = `
     <div class="scard scard-btn ${aS==='all'?'scard-active':''}" onclick="setStatus('all')" title="Show all">
-      <div class="snum" style="color:#e8eef5">${t}</div><div class="slabel">Total Products</div>
-      <div class="scard-indicator" style="background:#e8eef5"></div>
+      <div class="snum" style="color:#111827">${t}</div><div class="slabel">Total Products</div>
+      <div class="scard-indicator" style="background:#111827"></div>
     </div>
     <div class="scard scard-btn ${aS==='live'?'scard-active':''}" onclick="setStatus('live')" title="Filter: Live Today">
       <div class="snum" style="color:#34d399">${live}</div><div class="slabel">Live Today</div>
